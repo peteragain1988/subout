@@ -1,0 +1,38 @@
+@import 'bootstrap-sprockets';
+@import "bootstrap-custom";
+
+.header{
+  margin-bottom: 5rem;
+}
+
+#buy-sell-connect{
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), color-stop(40%, #93cb7a), to(#69b645));
+  background-image: -webkit-linear-gradient(#ffffff, #93cb7a 40%, #69b645);
+  background-image: -moz-linear-gradient(top, #ffffff, #93cb7a 40%, #69b645);
+  background-image: linear-gradient(#ffffff, #93cb7a 40%, #69b645);
+  background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ff69b645', GradientType=0);
+  -webkit-box-shadow: #eeeeee;
+  box-shadow: #eeeeee;
+  text-shadow: 0 1px 2px #000000;
+  min-height: 260px;
+  text-align: center;
+  color: #fff;
+  font-size: 3em;
+  line-height: 1.5em;
+  word-break: break-all;
+  .inner{ padding: 60px 0px;}
+}
+
+
+.alert-notice{
+  @extend .alert-info;
+}
+
+.alert-error{
+  @extend .alert-danger;
+}
+
+.alert-alert{
+  @extend .alert-danger;
+}

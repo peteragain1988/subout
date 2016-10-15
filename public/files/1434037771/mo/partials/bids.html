@@ -1,0 +1,58 @@
+<div ui-content-for="title">
+  <span>My Bids</span>
+</div>
+
+<div ui-content-for="footer">
+  <div class="btn-group justified">
+    <a href="#modal" class="btn btn-navbar" data-toggle="modal" ng-click="setOpportunity({}); displayNewOpportunityForm()">+ Post new opportunity</a>
+  </div>
+</div>
+
+<div class="scrollable">
+  <div class="scrollable-content">
+    <div id="bids" class="section">
+      <br/>
+      <div class="alert alert-info">
+        <div class="welcome display-message top-banner">
+          <span class="display-message-extra">Welcome</span>
+          <span class="company display-message-subject">{{company.name}}!</span>
+          <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+        </div>
+      </div>
+
+      <div class="clearfix">
+        <div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div>
+      </div>
+
+      <div>
+        <table ng-repeat="bid in paginated_results" class="table table-border">
+          <tr>
+            <td class="table-header">Opportunity</td>
+            <td class="col-xs-6">
+              <a href="#/opportunities/{{bid.opportunity.reference_number}}" ng-if="bid.opportunity.for_quote_only==false">{{bid.opportunity.name}}</a>
+              <a href="#/quote_requests/{{bid.opportunity.reference_number}}" ng-if="bid.opportunity.for_quote_only==true">{{bid.opportunity.name}}</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">Amount</td>
+            <td>${{bid.amount}}</td>
+          </tr>
+          <tr>
+            <td class="table-header">Comment</td>
+            <td>{{bid.comment}}</td>
+          </tr>
+          <tr>
+            <td class="table-header">Status</td>
+            <td>{{bid.status}}</td>
+          </tr>
+          <tr>
+            <td class="table-header">Date</td>
+            <td>{{bid.created_at | date}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="clearfix">
+        <div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div>
+      </div>
+    </div>
+</div>

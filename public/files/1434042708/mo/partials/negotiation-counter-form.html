@@ -1,0 +1,41 @@
+<div id="negotiationCounterOffer" ng-controller="NegotiationCounterOfferCtrl">
+  <div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button"> x </button>
+    <h3>Bid Negotiation</h3>
+  </div>
+  <div class="modal-body">
+    <div ng-if="errors" class="alert alert-danger">
+      <p ng-repeat="error in errors">{{error}}</p>
+    </div>
+
+    <form name="newNegotiation" class="form-horizontal">
+
+      <div class="form-group">
+        <label for="bid_amount" class="col-md-4 control-label">Counter Offer Amount ($) *</label>
+        <div class="col-md-8">
+          <input type="text"
+                 id="bid_amount"
+                 name="bid_amount"
+                 required
+                 ng-model="bid.amount"
+                 ui-validate="{ only_numbers: 'validateNumber($value)' }"
+                 size="10"
+                 maxlength="10"
+                 class="form-control">
+          <p ng-show="newNegotiation.bid_amount.$error.only_numbers" class="help-block">Enter only numeric characters.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-md-offset-4 col-md-8">
+          <div>
+            <button ng-click="save()" class="btn btn-success" ng-disabled="newNegotiation.$invalid">
+              Negotiate
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

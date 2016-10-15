@@ -1,0 +1,234 @@
+<div id="opportunity-show">
+  <div class="welcome display-message top-banner">
+    <span class="display-message-extra">Welcome</span>
+    <span class="company display-message-subject">{{company.name}}!</span>
+    <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <h5>OFFERED BY</h5>
+      <div class="company-info">
+        <ul>
+          <li>
+            <img ng-show="opportunity.buyer.logo_url" ng-src="{{opportunity.buyer.logo_url}}" />
+            <div ng-hide="opportunity.buyer.logo_url">No Logo Available</div>
+          </li>
+          <li><a href="#modal" data-toggle="modal" ng-click="displayCompanyProfile(opportunity.buyer._id)">{{opportunity.buyer.abbreviated_name}}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+      <div class="alert alert-error" ng-show="errors">
+        <a class="close" ng-click="hideAlert()">&times;</a>
+        <ul ng-repeat="error in errors">
+          <li>{{error}}</li>
+        </ul>
+      </div>
+      <div class="row">
+        <div class="col-sm-8 details">
+          <h3>{{opportunity.name}} <span class="status">({{opportunity.status}})</span></h3>
+          <div ng-show="opportunity.winning_bid_id">
+            <ul>
+              <li ng-show="company._id == opportunity.buyer_id"><span class="label-field">Winner: </span>{{opportunity.winner.name}}</li>
+              <li><span class="label-field">Winning amount: </span> <span>{{ opportunity.winner.amount | soCurrency }}</span></li>
+            </ul>
+          </div>
+          <div ng-show="!opportunity.is_for_special_region">
+            <ul>
+              <li><span class="label-field">Pick up time: </span>{{opportunity.start_date | soShortDate}} {{opportunity.start_time}}</li>
+              <li><span class="label-field">Pick up location: </span>{{opportunity.start_location}}</li>
+              <li><span class="label-field">Drop off time: </span>{{opportunity.end_date | soShortDate}} {{opportunity.end_time}}</li>
+              <li><span class="label-field">Drop off location: </span>{{opportunity.end_location}}</li>
+            </ul>
+          </div>
+          <div ng-show="opportunity.is_for_special_region">
+            <span class="label-field">Location: </span>{{opportunity.special_region}}
+          </div>
+          <div ng-show="opportunity.trip_type">
+            <span class="label-field">Trip Type: </span>{{opportunity.trip_type}}
+          </div>
+          <div ng-show="opportunity.vehicle_type">
+            <span class="label-field">Vehicle Type: </span>{{opportunity.vehicle_type}}
+          </div>
+          <div ng-show="opportunity.vehicle_count > 1">
+            <span class="label-field">Total Number Of Vehicles Needed: </span>{{opportunity.vehicle_count}}
+          </div>
+          <div class="description">
+            <div><strong>Description</strong></div>
+            <div class="content">{{opportunity.description}}</div>
+            <div class="help-block"><div class="text-danger" ng-bind-html-unsafe="opportunity.buyer_message"></div></div>
+          </div>
+          <div>
+            <ul>
+              <li><span class="label-field">Created: </span>{{opportunity.created_at | soShortDate}}</li>
+              <li ng-show="opportunity.quick_winnable"><span class="label-field">Buy it now: </span>{{opportunity.win_it_now_price | soCurrency}}</li>
+            </ul>
+          </div>
+          <div>
+            <span class="label-field">SO#: </span>{{opportunity.reference_number}}
+          </div>
+          <div ng-show="opportunity.contact_phone">
+            <span class="label-field">Contact phone: </span>{{opportunity.contact_phone}}
+          </div>
+          <div ng-show="opportunity.status == 'In progress' || opportunity.in_negotiation">
+            <span class="label-field">Bidding ends: </span>
+            <span relative-time="opportunity.bidding_ends_at" title="{{opportunity.bidding_ends_at}}">{{opportunity.bidding_ends_at|date}}</span>
+          </div>
+          <div ng-show="opportunity.status && opportunity.status != 'In progress' && !opportunity.in_negotiation">
+            <span class="label-field warning">Bidding ended</span><br>
+            <span ng-hide="opportunity.winning_bid_id || opportunity.status=='Awarded'">The poster of this opportunity has not yet selected a winner.</span>
+          </div>
+          <div ng-show="opportunity.reserve_amount">
+            <span class="label-field">Starting price: </span>{{opportunity.reserve_amount | soCurrency}}
+          </div>
+          <div class="actions" ng-show="company.canCancelOrEdit(opportunity)">
+            <a href="#modal" class="btn btn-primary" data-toggle="modal" ng-show="opportunity.bids.length == 0" ng-click="setOpportunity(opportunity); displayNewOpportunityForm()">Edit</a>
+            <a href="#modal" ng-if="company.offerer" class="btn btn-primary btn-small" data-toggle="modal" ng-click="displayNewOfferForm(opportunity)">Select a vendor</a>
+            <button class='btn btn-danger' ng-click="cancelOpportunity()">Cancel this Opportunity</button>
+            <button class='btn btn-danger' ng-click="endOpportunity()">End this Opportunity</button>
+          </div>
+          <div class="actions" ng-show="opportunity.buyer_id == company._id">
+            <a href="#modal" class="btn btn-primary" data-toggle="modal" ng-click="cloneOpportunity(opportunity); displayNewOpportunityForm()">Duplicate</a>
+          </div>
+          <div ng-show="company.canBid(opportunity)">
+            <a href="#modal" class="btn btn-success btn-small" data-toggle="modal" ng-click="displayNewBidForm(opportunity)">Bid</a>
+            <span ng-show="opportunity.quick_winnable" class="win-it-now-button-wrapper">
+              &nbsp;<button class="btn btn-success btn-small" ng-click="winOpportunityNow(opportunity)">Win Now</button>
+            </span>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <a ng-show="opportunity.image_url && !isOldBrowser" rel="lightbox" href="{{opportunity.large_image_url}}" title="{{opportunity.name}}">
+            <img class="img-responsive" ng-src="{{opportunity.image_url}}" />
+          </a>
+          <a ng-show="opportunity.image_url && isOldBrowser"  href="{{opportunity.large_image_url}}" title="{{opportunity.name}}" target="_blank">
+            <img class="img-responsive" ng-src="{{opportunity.image_url}}" />
+          </a>
+        </div>
+      </div>
+
+      <div ng-if="opportunity.buyer && !opportunity.canceled">
+        <hr />
+        <h4>Bid History</h4>
+        <div>
+          <table class="bid-history table">
+            <tr ng-if="opportunity.offer">
+              <td><strong>{{opportunity.offer.amount | soCurrency}}</strong></td>
+              <td>
+                <div ng-if="opportunity.buyer.id==company.id">
+                  <strong>Offered to:</strong> {{opportunity.offer.vendor.name}} ({{opportunity.offer.vendor.email}})
+                </div>
+              </td>
+            </tr>
+            <tr id="bid_{{bid._id}}" ng-repeat="bid in opportunity.bids" ng-class="{true:'alert-success'}[opportunity.reserve_amount && bid.amount <= opportunity.reserve_amount]">
+              <td><strong>{{bid.amount | soCurrency}}</strong></td>
+              <td>
+                <div ng-show="opportunity.vehicle_count > 1"> <strong>{{bid.vehicle_count}}</strong> vehicle(s) </div>
+                <div ng-show="opportunity.buyer._id == company._id || bid.bidder._id == company._id">
+                  <div ng-repeat="vehicle in bid.vehicles">
+                    <p>
+                    <strong>Bus year:</strong> {{vehicle.year}}, 
+                    <strong>Type:</strong> {{vehicle.type && vehicle.type||vehicle.type_other}},
+                    <strong>Passengers:</strong> {{vehicle.passenger_count}},
+                    <strong>gratuity included?:</strong> {{vehicle.gratuity_included && 'Yes'||'No'}}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td>on <strong>{{bid.created_at | soShortDate}}</strong></td>
+              <td>
+                <span ng-show="opportunity.buyer._id == company._id || bid.bidder._id == company._id">
+                  by <a data-toggle="modal" href="#modal" ng-click="displayCompanyProfile(bid.bidder._id)">{{bid.bidder.name}}</a>
+                  <div ng-if="opportunity.isSuboutChoice(bid)">
+                    <i class="glyphicon glyphicon-tag"></i> - Subout choice -
+                    Note if they are higher of course you have to negotiate them down.
+                  </div>
+                </span>
+              </td>
+              <td ng-show="opportunity.buyer._id == company._id"><span class="glyphicon glyphicon-phone">{{bid.bidder.contact_phone}}</span></td>
+              <td class="tpa">
+                 <img src="/img/tpa-logo.png" ng-show="bid.bidder.tpa">
+              </td>
+              <td>{{bid.comment}}</td>
+              <td ng-hide="opportunity.bidding_done || bid.bidder._id != company._id || (bid.created_at | timestamp) < halfDayAgo">
+                <button class='btn btn-danger btn-mini pull-right' ng-click="cancelBid(bid)">Cancel</button>
+              </td>
+              <td>
+                  <span class="text-info" ng-show="opportunity.buyer._id == company._id || bid.bidder._id == company._id">
+                    <strong>Status: </strong>
+                    <span>{{bid.state}}</span>
+                    <span ng-show="bid.state=='negotiating'">
+                      - Offer: {{bid.offer_amount | soCurrency}}
+                      ,
+                      <span ng-show="bid.amount == bid.counter_amount">Counter Offer: {{bid.counter_amount | soCurrency}}</span>
+                    </span>
+
+                  </span>
+              </td>
+              <td class="text-right">
+                <span ng-hide="bid.state=='canceled' || bid.state=='declined' || opportunity.bidding_done">
+                  <span ng-show="opportunity.buyer._id == company._id">
+                    <span ng-hide="bid.state=='negotiating'">
+                      <a href="#modal" data-toggle="modal" class='btn btn-warning btn-mini' ng-click="displayNegotiationForm(opportunity, bid)"><i class='glyphicon glyphicon-usd'></i> Negotiate</a>
+                      <button class='btn btn-primary btn-mini' ng-click="selectWinner(bid)"><i class='glyphicon glyphicon-ok-sign'></i> Accept</button>
+                    </span>
+                    <span ng-show="bid.state=='negotiating' && bid.amount == bid.counter_amount">
+                      <button class='btn btn-primary btn-mini' ng-click="selectWinner(bid)"><i class='glyphicon glyphicon-ok-sign'></i> Accept Counter Offer</button>
+                      <button class='btn btn-danger btn-mini' ng-click="declineCounterOffer(opportunity, bid)"><i class='glyphicon glyphicon-ok-sign'></i> Not Accept</button>
+                    </span>
+                  </span>
+
+                  <span ng-show="bid.bidder._id == company._id">
+                    <span ng-hide="bid.amount == bid.counter_amount">
+                      <button class='btn btn-primary btn-mini' ng-show="bid.state=='negotiating'" ng-click="acceptNegotiation(bid)"><i class='glyphicon glyphicon-ok-sign'></i> Accept Offer</button>
+                      <a href="#modal" data-toggle="modal" class='btn btn-warning btn-mini' ng-show="bid.state=='negotiating'" ng-click="displayNegotiationCounterForm(opportunity, bid)"><i class='glyphicon glyphicon-edit'></i> Counter Offer</a>
+                    </span>
+                    <span ng-show="bid.state=='negotiating' && bid.amount != bid.counter_amount">
+                      <button class='btn btn-danger btn-mini' ng-click="declineOffer(bid)"><i class='glyphicon glyphicon-remove-sign'></i> Not accept</button>
+                    </span>
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div ng-if="opportunity.buyer">
+        <hr />
+        <div>Have a question about this opportunity? <a href="mailto:{{opportunity.buyer.email}}">Ask {{opportunity.buyer.contact_name}} ({{opportunity.buyer.email}})</a></div>
+        <h4>{{opportunity.buyer.name}}'s Comments</h4>
+        <ul class="comments">
+          <li ng-repeat="comment in opportunity.comments">
+            <div>
+              <span class="timeago" relative-time="comment.created_at" title="{{comment.created_at}}">{{comment.created_at|date}}</span>
+            </div>
+            <div class="comment-body">{{comment.body}}</div>
+          </li>
+        </ul>
+        <div>
+          <form name="newComment" class="form-horizontal">
+            <div class="alert alert-danger" ng-show="errors">
+              <a class="close" ng-click="hideAlert()">&times;</a>
+              <ul ng-repeat="error in errors">
+                <li>{{error}}</li>
+              </ul>
+            </div>
+            <div class="form-group" ng-show="opportunity.buyer_id == company._id">
+              <label for="comment_body" class="col-sm-3 control-label">New Comment: </label>
+              <div class="col-sm-9">
+                <input type="text" id="comment_body" name="comment_body" ng-model="comment.body" class="form-control">
+              </div>
+            </div>
+            <div class="form-group" ng-show="opportunity.buyer_id == company._id">
+              <div class="col-sm-offset-3 col-sm-9">
+                <button ng-click="addComment()" class="btn btn-success" ng-disabled="newComment.$invalid">Add</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

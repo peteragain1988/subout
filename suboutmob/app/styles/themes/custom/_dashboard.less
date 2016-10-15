@@ -1,0 +1,61 @@
+#dashboard {
+  .win-it-now-button-wrapper {
+    padding-top: 2px;
+  }
+}
+
+#pills{
+  .pill, .clear-filters {
+    float: left;
+    padding: 2px 6px;
+    color: white;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    margin-right: 10px;
+    .close {
+      margin: -2px 0 0 4px;
+    }
+  }
+  .pill {
+    background-color: @appleGreen;
+    border: 1px solid @appleGreen;
+    margin-bottom: 3px;
+    &.region{
+      background-color: @orange;
+      border: 1px solid @orange;
+    }
+  }
+
+  .clear-filters {
+    text-decoration: none;
+    background-color: @skyBlue;
+    border: 1px solid @skyBlue;
+  }
+}
+
+.icon-vehicle-needed:before   { content: "\e129"; }
+.icon-vehicle-for-hire:before { content: "\e024"; }
+.icon-special:before          { content: "\e122"; }
+.icon-emergency:before        { content: "\e081"; }
+.icon-part:before             { content: "\e019"; }
+.icon-buy-or-sell-parts-and-vehicles:before             { content: "\e019"; }
+
+.icon-vehicle-needed, .icon-vehicle-for-hire, .icon-special, .icon-emergency, .icon-part, .icon-buy-or-sell-parts-and-vehicles {
+  vertical-align: middle;
+}
+.ada-required {
+  background-image: url('/img/ada-required.png');
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+
+.icon-quote-request{
+  color: #a020f0;
+}
+
+.event.quote-request{
+  .alert-danger;
+  font-weight: bold;
+  font-style: italic;
+}

@@ -1,0 +1,40 @@
+%h3 Vendors
+.clearfix
+  .pull-right
+    = paginate(@vendors)
+
+.row-fluid
+  %table.table.table-striped.table-bordered
+    %thead
+      %th Email
+      %th Vendor Name
+      %th Vendor Id
+      %th City
+      %th State
+      %th Source
+      %th Total invited amount
+      %th Total invitation count
+      %th Total won amount
+      %th Last invited date
+
+    - @vendors.each do |vendor|
+      %tr
+        %td= vendor.email
+        %td= vendor.name
+        %th= vendor.crm_vendor_id
+        %td= vendor.city
+        %td= vendor.state
+        %td= vendor.source
+        %td= number_to_currency(vendor.total_invited_amount)
+        %td= vendor.offers.count
+        %td= number_to_currency(vendor.total_won_amount)
+        %td
+          - if vendor.offers.count > 0
+            = time_ago_in_words vendor.offers.recent.first.created_at
+            ago
+            %br
+            = vendor.offers.recent.first.created_at.to_s(:db)
+
+.clearfix
+  .pull-right
+    = paginate(@vendors)

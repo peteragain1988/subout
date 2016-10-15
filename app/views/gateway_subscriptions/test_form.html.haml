@@ -1,0 +1,23 @@
+= form_tag "/api/v1/gateway_subscriptions" do
+  .control
+    = label_tag "Subscription ID"
+    = text_field_tag "payload[subscription][id]", "6416849"
+  .control
+    = label_tag "Product Handle"
+    = text_field_tag "payload[subscription][product][handle]", "state-by-state-service"
+  .control
+    = label_tag "Customer ID"
+    = text_field_tag "payload[subscription][customer][id]", "2502083"
+  .control
+    = label_tag "Customer Email"
+    = text_field_tag "payload[subscription][customer][email]", "ghostofbasho@gmail.com"
+  .control
+    = label_tag "First name"
+    = text_field_tag "payload[subscription][customer][first_name]", "Thomas"
+  .control
+    = label_tag "Last name"
+    = text_field_tag "payload[subscription][customer][last_name]", "McCarthy-Howe"
+  .control
+    = label_tag "Organization"
+    = text_field_tag "payload[subscription][customer][organization]", "splendtastic"
+  = submit_tag "Submit"

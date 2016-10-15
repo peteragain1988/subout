@@ -1,0 +1,93 @@
+- form_layout ||= params[:layout] || "vertical"
+= bootstrap_form_for @quote_request, url: consumers_quote_requests_url(@quote_request, retailer_id: @retailer.id), authenticity_token: false, layout: form_layout.to_sym do |f|
+  = f.text_field :organization
+  = f.text_field :first_name, label: 'First name *'
+  = f.text_field :last_name, label: 'Last name *'
+  = f.text_field :email, label: 'Email *'
+  = f.text_field :email_confirmation, label: 'Email confirmation *'
+  = f.text_field :phone, placeholder: "(xxx)-xxx-xxxx", label: 'Phone *'
+  = f.select :vehicle_type, [''] + QuoteRequest::VEHICLE_TYPES.to_a, label: 'Vehicle type *'
+  = f.text_field :vehicle_count, label: 'Vehicle count *', placeholder: '1 vehicle'
+  = f.text_field :passengers, label: 'Passengers *'
+  = f.text_field :start_location_address, label: 'Pick up address *'
+  = f.text_field :start_location_city, label: 'Pick up city *'
+  = f.text_field :start_location_state, label: 'Pick up state *'
+  = f.text_field :start_location_zip, label: 'Pick up zip *'
+
+  = f.text_field :start_date, placeholder: "mm/dd/yyyy", class: 'datepicker', label: 'Pick up date *'
+  = f.text_field :start_time, placeholder: "hh:mm", class: 'timepicker', label: 'Pick up time *'
+  = f.text_field :end_location_address, label: 'Drop off address *'
+  = f.text_field :end_location_city, label: 'Drop off city *'
+  = f.text_field :end_location_state, label: 'Drop off state *'
+  = f.text_field :end_location_zip, label: 'Drop off zip *'
+
+  = f.text_field :departure_date, placeholder: "mm/dd/yyyy", class: 'datepicker', label: 'Departure date *'
+  = f.text_field :departure_time, placeholder: "hh:mm", class: 'timepicker', label: 'Departure time *'
+  
+  = f.select :trip_type, [''] + QuoteRequest::TRIP_TYPES.to_a, label: 'Trip type *'
+  = f.form_group do
+    .help
+      %small 
+        For the most accurate quote please provide as much details about your trip as possible. Number of stops, passenger count, itinerary, special needs, etc
+  = f.text_area :description, label: 'Description *'
+  / = f.form_group do
+  /   = f.check_box :agreement,  label: 'I agree to receive email messages'
+  = f.submit "Request Quote", class: "btn btn-danger", id: "submit-quote-request"
+
+  .errors
+
+:javascript
+  var init_subout_quote_request_form = function(){
+
+    var form = jQuery("#new_quote_request");
+    jQuery(form).submit(function(e){
+      e.preventDefault();
+      $("#submit-quote-request").attr("disabled", true);
+
+      var posting = jQuery.post(form.attr('action'), form.serialize());
+      posting.done(function (data) {
+          form.html(data);
+          $("#submit-quote-request").attr("disabled", false);
+      });
+      
+      posting.fail(function(data){
+        form.addClass('error');
+        $("#submit-quote-request").attr("disabled", false);
+
+        var errors_html = jQuery('.errors', form).html('');
+        var payload = null;
+
+        if (data.responseJSON){
+          payload = data.responseJSON.payload;
+        }else{
+          payload = jQuery.parseJSON(data.responseText).payload;
+        }
+
+        var errors = payload.errors;  
+        var error_messages = payload.error_messages;
+
+        for(i=0;i<error_messages.length;i++){
+          errors_html.append("<p class='error'>"+error_messages[i]+"</p>");
+        }
+
+        for(field in errors){
+          jQuery('#quote_request_' + field).addClass('error');
+        }
+
+      });
+    });
+  }
+
+  if(typeof jQuery=='undefined') {
+    alert("jQuery is required");
+  }else{
+    jQuery(function(){
+      init_subout_quote_request_form();
+      if($('.timepicker').pickatime != undefined && $('.datepicker').pickadate != undefined) {
+        $('.timepicker').pickatime({format: 'h:i A'});
+        $('.datepicker').pickadate({format: 'mm/dd/yyyy'});
+      } else {
+        alert('We recommend pickadate.js library for the date picker and time picker. Please see http://amsul.ca/pickadate.js/');
+      }
+    });
+  }

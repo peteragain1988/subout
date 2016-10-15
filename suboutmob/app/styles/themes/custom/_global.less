@@ -1,0 +1,194 @@
+/****************************************************************************************************************************
+ *
+ * current_file: app/styles/themes/custom/_global.less
+ *
+ */
+html{
+  background: #fff;
+}
+body{
+  font-family:"myriad-pro";
+  font-weight:400;
+}
+
+h5 {
+  font-weight:900;
+}
+
+ul {
+  margin:0px;
+  padding:0px;
+  li {
+    list-style:none;
+  }
+}
+
+a, a:active {
+  outline:none;
+  cursor: pointer;
+}
+
+h5 {
+  text-transform: uppercase;
+  font-size:1.1em;
+  color: @darkGray;
+}
+
+body {
+  background:#fff;
+}
+
+.app{
+  background: #fff!important;
+}
+
+.sidebar{
+  background: #fff;
+}
+
+#subout-loading {
+  width:50px;
+  height:60px;
+  top: 0px
+  right: 0px;
+  -webkit-transition:0.2s linear all;
+  -moz-transition:0.2s linear all;
+  -ms-transition:0.2s linear all;
+  -o-transition:0.2s linear all;
+  transition:0.2s linear all;
+  background:url(/img/ajax-loader.gif) center right no-repeat;
+  opacity:0;
+  float:right;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+}
+
+#subout-loading.loading {
+  opacity:1;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+}
+
+#buy-sell-connect{
+  #gradient>.vertical-three-colors(#fff, #93cb7a, 40%, #69b645);
+  .box-shadow(#eee);
+  text-shadow: 0 1px 2px rgba(0,0,0,1);
+  min-height: 260px;
+  text-align: center;
+  color: #fff;
+  font-size: 3em;
+  line-height: 1.5em;
+  word-break: break-all;
+  .inner{ padding: 60px 0px;}
+}
+#marketing-message{
+  color: #f9b474;
+  font-size: 20px;
+  line-height: 1.5em;
+  font-style: italic;
+  .inner{
+    padding: 0px;
+  } 
+  a {
+    color: #f9b474;
+    text-decoration: none;
+  }
+}
+
+#content.loading {
+  min-height:100px;
+  position:relative;
+}
+
+#content.loading:after {
+  position:absolute;
+  content:"";
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+}
+
+.content-loading-animation, #content.loading:after {
+  background:white url(/img/ajax-loader-body.gif) center 50px no-repeat;
+ }
+
+.content-loading-animation {
+  margin:0 auto;
+  width:150px;
+  height:150px;
+  display:block;
+}
+
+.modal-loading-animation.loading {
+  background:blue;
+}
+
+.table{
+  background: #f0f0f0;
+}
+.filters {
+  padding: 1rem;
+  .filter {
+    text-align:left;
+    margin-bottom:5px;
+    cursor:pointer;
+    .color {
+      width:2em;
+      height:2em;
+    }
+    .status {
+      background: url(../img/filters/none-active.png) no-repeat left center;
+      width:2em;
+      height:2em;
+    }
+    .name {
+      line-height:2em;
+    }
+    .filter-icon {
+      width:12%;
+      float:left;
+      overflow:hidden;
+      margin-right:3%;
+      img {
+        width:100%;
+      }
+    }
+    .filter-name {
+      color: @skyBlue;
+    }
+  }
+}
+.filters .filter {
+  padding: 0 3px;
+  &.active {
+    background-color: @appleGreen;
+    max-width: 200px;
+    a {
+      color: white;
+    }
+    &.red {
+      background-color: #f25a29;
+    }
+  }
+}
+#tags {
+  .tag {
+    margin-bottom:0.3em;
+    cursor:pointer;
+    color: @skyBlue;
+  }
+}
+
+#opportunity-show{
+  .description {
+    .content {
+      word-break: break-all;
+      word-wrap: break-word;
+      white-space: pre;
+      white-space: pre-wrap;
+      padding-left: 5px;
+    }
+  }
+}
+

@@ -1,0 +1,532 @@
+<div id="page-settings" ng-controller="SettingCtrl">
+  <div class="modal-header">
+    <button class="close" 
+            ui-turn-off="modal1">&times;</button>
+    <h4 class="modal-title">Setting</h4>
+    <div class="modal-loading-animation loading-animation"></div>
+  </div>
+
+  <div class="modal-body">
+    <ul class="nav nav-tabs">
+      <li ng-class="{active:selectedTab == 'user-login'}">
+        <a href="" ng-click="selectedTab='user-login'" data-toggle="tab">User</a>
+      </li>
+      <li ng-class="{active:selectedTab == 'company-profile'}">
+        <a href="" ng-click="selectedTab='company-profile'">Company</a>
+      </li>
+      <li ng-class="{active:selectedTab == 'notifications'}">
+        <a href="" ng-click="selectedTab='notifications'">Notifications</a>
+      </li>
+      <li ng-class="{active:selectedTab == 'fleet'}">
+        <a href="" ng-click="selectedTab='fleet'">Fleet</a>
+      </li>
+      <li ng-class="{active:selectedTab == 'favorited-regions'}">
+        <a href="" ng-click="selectedTab='favorited-regions'">Regions</a>
+      </li>
+      <li ng-class="{active:selectedTab == 'vehicles'}">
+        <a href="" ng-click="selectedTab='vehicles'">Vehicles</a>
+      </li>
+      <li ng-class="{active:selectedTab == 'others'}">
+        <a href="" ng-click="selectedTab='others'">Others</a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div ng-class="{active:selectedTab == 'user-login'}" class="tab-pane" id="user-login">
+        <form name="settingsUserLogin" role="form" novalidate>
+            <p class="alert alert-danger" ng:show="userProfileError">{{userProfileError}}</p>
+
+            <div class="form-group" ng-class="{'has-error':settingsUserLogin.user_email.$invalid}">
+              <label for="user_email">Email *</label>
+              <div>
+                <input id="user_email" name="user_email" type="email" class="form-control" ng:model="userProfile.email" required />
+              </div>
+            </div>
+            
+            <div class="form-group" ng-class="{'has-error':settingsUserLogin.current_password.$invalid}">
+              <label for="current_password">Current Password *</label>
+              <div>
+                <input id="current_password"
+                name="current_password"
+                type="password"
+                class="form-control"
+                ng:model="userProfile.current_password"
+                required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password">New Password</label>
+              <div>
+                <input id="password"
+                type="password"
+                class="form-control"
+                ng:model="userProfile.password"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password_confirmation">Password Confirmation</label>
+              <div>
+                <input id="password_confirmation"
+                type="password"
+                class="form-control"
+                ng:model="userProfile.password_confirmation"
+                />
+              </div>
+            </div>
+            <hr/>
+
+            <div class="form-group">
+              <button ui-turn-off="modal1" class="btn btn-default">Close</button>
+              <button class="btn btn-primary" ng:click="saveUserProfile()" ng-disabled="settingsUserLogin.$invalid">Save</button>
+            </div>
+        </form>
+      </div>
+
+      <div ng-class="{active:selectedTab == 'notifications'}" class="tab-pane" id="notifications">
+        <form name="settingsNotifications" novalidate>
+          <div class="form-group">
+            <label for="notification_email">Notification Email</label>
+            <div>
+              <input id="notification_email" name="notification_email" type="email" class="form-control" ng:model="companyProfile.notification_email"/>
+              <p class="help-block">If notification email is empty, we will send email to company email address. ({{companyProfile.email}})</p>
+            </div>
+          </div>
+          <hr />
+          <div class="notification-items">
+            <h5>Email</h5>
+            <div ng-repeat="notification_type in NOTIFICATION_TYPES">
+              <label for="notification_{{notification_type.code}}" class="checkbox" ng-if="notification_type.type=='email'">
+                 <input id="notification_{{notification_type.code}}" name="notification_item" type="checkbox" ng-checked="notification_type.enabled" ng-click="setNotification(notification_type)"/>
+                 {{notification_type.name}}
+              </label>
+            </div>
+
+
+              <h5>Mobile</h5>
+              <div ng-repeat="notification_type in NOTIFICATION_TYPES">
+                <label for="notification_{{notification_type.code}}" class="checkbox" ng-if="notification_type.type=='mobile'">
+                   <input id="notification_{{notification_type.code}}" name="notification_item" type="checkbox" ng-checked="notification_type.enabled" ng-click="setNotification(notification_type)"/>
+                   {{notification_type.name}}
+                </label>
+              </div>
+          </div>
+          <div>
+              <label for="notification_daily-reminder" class="checkbox">
+                 <input id="notification_daily-reminder" name="notification_item" type="checkbox" ng-mode="daily-reminder" ng-checked="daily_reminder" 
+                 ng-click="setReminderNotification()"/>
+              Only send daily reminder email
+              </label>
+          </div>
+          <hr />
+          <div class="form-group">
+            <button ui-turn-off="modal1" class="btn btn-default">Close</button>
+            <button class="btn btn-primary" ng:click="saveCompanyProfile()" ng-disabled="settingsNotifications.$invalid">Save</button>
+          </div>
+        </form>
+      </div>
+
+      <div ng-class="{active:selectedTab == 'company-profile'}" class="tab-pane" id="company-profile">
+        <form name="settingsCompanyProfile" novalidate>
+          <fieldset>
+            <p class="alert alert-danger" ng:show="companyProfileError">{{companyProfileError}}</p>
+
+            <div class="form-group two-lines" ng-class="{'has-error':settingsCompanyProfile.abbreviated_name.$invalid}">
+              <label for="abbreviated_name">Company Abbreviated Name *</label>
+              <div>
+                <input id="abbreviated_name"
+                name="abbreviated_name"
+                type="text"
+                class="form-control"
+                ng:model="companyProfile.abbreviated_name"
+                required
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="dot_number">DOT Number</label>
+              <div>
+                <input id="dot_number" type="text" class="form-control" ng:model="companyProfile.dot_number" />
+                <p class="help-block warning">Required for bidding.</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="insurance">Insurance</label>
+              <div>
+                <select class="form-control" ng-model="companyProfile.insurance">
+                  <option value=""></option>
+                  <option value="lt_1M">&lt; 1M</option>
+                  <option value="1M">1M</option>
+                  <option value="5M">5M</option>
+                  <option value="10M">10M</option>
+                  <option value="gt_10M">&gt; 10M</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="logo_id">Company Logo</label>
+              <div>
+                <input ng-init="setupFileUploader()" class="cloudinary-fileupload form-control" data-url="https://api.cloudinary.com/v1_1/subout/auto/upload" name="file" type="file"></input>
+                <input type="hidden" id="company_logo_id" class="file-upload-public-id" value="{{company.logo_id}}" ng-model="company.logo_id">
+              </div>
+              <div id="progress">
+                <div class="bar" style="width: 0%;"></div>
+              </div>
+              <div>
+                <img ng-show="company.logo_url" ng-src="{{company.logo_url}}" class="image-preview img-responsive"/>
+              </div>
+              <div ng-hide="company.logo_url">No Logo Available</div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':settingsCompanyProfile.since.$invalid}">
+              <label for="since">Established Date *</label>
+              <div>
+                <input id="since" name="since" type="text" class="form-control" ng:model="companyProfile.since" required />
+              </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':settingsCompanyProfile.owner.$invalid}">
+              <label for="owner">Owner *</label>
+              <div>
+                <input id="owner" name="owner" type="text" class="form-control" ng:model="companyProfile.owner" required />
+              </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':settingsCompanyProfile.contact_name.$invalid}">
+              <label for="owner">Contact Name *</label>
+              <div>
+                <input id="contact" name="contact_name" type="text" class="form-control" ng:model="companyProfile.contact_name" required />
+              </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':settingsCompanyProfile.contact_phone.$invalid}">
+              <label for="contact_phone">Contact Phone *</label>
+              <div>
+                <input id="contact_phone" name="contact_phone" type="text" class="form-control" ng:model="companyProfile.contact_phone" required />
+              </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':settingsCompanyProfile.contact_email.$invalid}">
+              <label for="contact_email">Contact Email *</label>
+              <div>
+                <input id="contact_email" name="contact_email" type="email" class="form-control" ng:model="companyProfile.email" required />
+              </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':settingsCompanyProfile.website.$invalid}">
+              <label for="website">Website *</label>
+              <div>
+                <input id="website" name="website" type="text" class="form-control" ng:model="companyProfile.website" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cell_phone">Text message (SMS) number</label>
+              <div>
+                <input id="cell_phone" type="text" class="form-control" ng-model="companyProfile.cell_phone" />
+                <p class="help-block">We will send text messages about all opportunities</p>
+              </div>
+            </div>
+
+            <hr />
+
+            <div class="form-group">
+              <label for="address_line1">Street</label>
+              <div>
+                <input id="address_line1" type="text" class="form-control" ng:model="companyProfile.address_line1" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address_line2">Street 2/Apt</label>
+              <div>
+                <input id="address_line2" type="text" class="form-control" ng:model="companyProfile.address_line2" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="city">City</label>
+              <div>
+                <input id="city" type="text" class="form-control" ng:model="companyProfile.city" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="state">State</label>
+              <div>
+                <input id="state" type="text" class="form-control" ng:model="companyProfile.state" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="country">Country</label>
+              <div>
+                <select class="form-control" name="country" id="country"  ng-model="companyProfile.country">
+                  <option value="USA">USA</option>
+                  <option value="Canada">Canada</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="zip_code">Zip code</label>
+              <div>
+                <input id="zip_code" type="text" class="form-control" ng:model="companyProfile.zip_code" />
+              </div>
+            </div>
+
+            <hr />
+
+
+            <div class="form-group" ng-class="{'has-error':settingsCompanyProfile.payment_method.$invalid}">
+              <label for="payment_method">Payment methods</label>
+              <div>
+                <ul>
+                  <li ng-repeat="payment_method in companyProfile.payment_methods">
+                    {{payment_method}} <a ng-click="removePaymentMethod(payment_method)" class="icon icon-trash"></a>
+                  </li>
+                </ul>
+                <select id="payment_method" name="payment_method" ng-model="newPaymentMethod" ng-options="t for t in paymentMethodOptions">
+                  <option value="">Select</option>
+                </select>
+                <button class="btn" ng-click="addPaymentMethod()" ng-disabled="!newPaymentMethod">Add</button>
+              </div>
+            </div>
+            <hr/>
+
+            <div class="form-group">
+              <button ui-turn-off="modal1" class="btn btn-default">Close</button>
+              <button class="btn btn-primary" ng-click="saveCompanyProfile()" ng-disabled="settingsCompanyProfile.$invalid">Save</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+
+      <div ng-class="{active:selectedTab == 'fleet'}" class="tab-pane" id="fleet">
+        <form name="settingsFleet" novalidate>
+          <fieldset>
+            <p class="alert alert-danger" ng:show="companyProfileError">{{companyProfileError}}</p>
+
+            <div class="form-group">
+              <label for="has_ada_vehicles">Fleet includes ADA vehicles?</label>
+              <div>
+                <input id="has_ada_vehicles" type="checkbox" ng-model="companyProfile.has_ada_vehicles" value="1">
+                <p class="help-block warning">Required for bidding on ADA opportunities.</p>
+              </div>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error':settingsFleet.fleet_size.$invalid}">
+              <label for="fleet-size">Fleet Size *</label>
+              <div>
+                <input id="fleet-size" name="fleet_size" type="text" class="form-control" ng:model="companyProfile.fleet_size" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="vehicle-type">Vehicle Type</label>
+              <div>
+                <ul>
+                  <li ng-repeat="vehicle_type in companyProfile.vehicle_types">
+                    {{vehicle_type}} <a ng-click="removeVehicleType(vehicle_type)" class="glyphicon glyphicon-trash"></a>
+                  </li>
+                </ul>
+                <select id="vehicle-type" name="vehicle-type" ng-model="newVehicleType" ng-options="t for t in vehicleTypeOptions">
+                  <option value="">Select</option>
+                </select>
+                <button class="btn" ng-click="addVehicleType()" ng-disabled="!newVehicleType">Add</button>
+              </div>
+            </div>
+            <hr />
+            <div class="form-group">
+              <button ui-turn-off="modal1" class="btn btn-default">Close</button>
+              <button class="btn btn-primary" ng-click="saveCompanyProfile()" ng-disabled="settingsFleet.$invalid">Save</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+
+      <div ng-class="{active:selectedTab == 'favorited-regions'}" class="tab-pane" id="favorited-regions">
+        <h4>Favorited Regions:</h4>
+        <form name="settingsFavoritedRegions" novalidate>
+          <div class="region-checkboxes">
+            <fieldset class="col-md-12">
+              <div class="form-group">
+                <label ng-repeat="(region_name, region_abbr) in ALL_REGIONS" for="input-region-{{region_abbr}}" class="checkbox">
+                  <div>
+                    <input
+                      id="input-region-{{region_abbr}}"
+                      type="checkbox"
+                      name="regions[{{ region_abbr }}]"
+                      ng-model="companyProfile.allRegions[region_name]"
+                      value="1">
+                      {{region_name}}
+                  </div>
+                </label>
+              </div>
+            </fieldset>
+            <hr/>
+            <div class="form-group">
+              <button ui-turn-off="modal1" class="btn btn-default">Close</button>
+              <button class="btn btn-primary" ng-click="saveFavoritedRegions()">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div ng-class="{active:selectedTab == 'vehicles'}" class="tab-pane" id="vehicles">
+
+        <h4>Current Subscription Plan: {{company.subscription_plan}}</h4>
+
+        <div ng-show="subscription != null">
+          <!--subout pro plan-->
+
+          <div class="subout-pro-subscription" ng-show="company.subscription_plan == 'subout-pro-service'">
+            <p>Subscription price: ${{(subout_pro_product.price_in_cents + additional_price)/100.00}}</p>
+            <div class="text-centered">
+              <div class="alert alert-info" ng-show="!subscription.has_valid_credit_card">You have not valid credit card number. Please update your credit card number to upgrade your plan.</div>
+            </div>
+          </div>
+
+          <!--subout basic plan-->
+
+          <div class="subout-basic-subscription" ng-show="company.subscription_plan == 'subout-basic-service'">
+            <p>Subscription price: {{subout_basic_product.price_in_cents/100 | soCurrency}}</p>
+            <div class="text-centered">
+              <div class="alert alert-info" ng-show="!subscription.has_valid_credit_card">You have not valid credit card number. Please update your credit card number to upgrade your plan.</div>
+              <button class="btn btn-primary" ng-disabled="!subscription.has_valid_credit_card" ng-click="updateProduct('subout-pro-service')">Upgrade to subout pro plan for {{subout_pro_product.price_in_cents/100 | soCurrency}}</button>
+            </div>
+          </div>
+
+          <!--free plan-->
+
+          <div ng-show="company.subscription_plan == 'free'" >
+            <p class="alert alert-info" ng-show="!subscription.has_valid_credit_card">You have not valid credit card number. Please update your credit card number to upgrade your plan.</p>
+            <div class="text-centered">
+              <button class="btn btn-primary" ng-click="updateProduct('subout-basic-service')" ng-disabled="!subscription.has_valid_credit_card">Upgrade to subout basic plan for {{subout_basic_product.price_in_cents/100 | soCurrency}}</button>
+              <br />
+              <br />
+              <button class="btn btn-primary" ng-click="updateProduct('subout-pro-service')" ng-disabled="!subscription.has_valid_credit_card">Upgrade to subout pro plan for {{subout_pro_product.price_in_cents/100 | soCurrency}}</button>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <div ng-show="subscription!=null">
+          <p class="text-centered">
+            <a class="btn btn-success" href="{{company.self_service_url}}" target="_blank">Update my credit card number</a>
+          </p>
+          <hr />
+        </div>
+
+        <form name="vehicleForm" id="vehicleForm" ng-show="company.subscription_plan == 'subout-pro-service'" novalidate>
+          <h4>Register Vehicles Here (2 vehicles included with subscription)</h4>
+          <p class="help-block">Additional vehicles can be added for ${{subout_bus_price}}</p>
+          <br />
+          <div ng-show="companyProfile.vehicles.length > 0">
+            <div ng-repeat="vehicle in companyProfile.vehicles" class="well">
+              <div class="visible-xs visible-sm">
+                <table class="table table-border ng-scope">
+                  <tr>
+                    <td class="table-header">RM #</td>
+                    <td>{{vehicle.rm_number}}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">Year</td>
+                    <td>{{vehicle.year}}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">Make</td>
+                    <td>{{vehicle.make}}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">Model</td>
+                    <td>{{vehicle.model}}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">VIN</td>
+                    <td>{{vehicle.vin}}</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <button class="btn btn-small" ng-click="vehicle.editable = 1"><span class="icon icon-pencil"></span>Edit</button>
+                    </td>
+                    <td></td>
+                  </tr>
+                </table>
+              </div>
+
+              <div ng-show="vehicle.editable">
+                <br />
+                <ng-form name="vform">
+                <div class="form-group" ng-show="vehicle.rm_number">
+                  <strong>RM Number:</strong> {{vehicle.rm_number}}
+                </div>
+                <div class="form-group">
+                  <label for="vehicle_year">Year</label>
+                  <div>
+                    <select id="vehicle_year" name="vehicle_year" class="form-control"  ng-model="vehicle.year" ng-options="y for y in years" required>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error':newVehicle.vehicle_make.$invalid}">
+                  <label for="vehicle_make">Make</label>
+                  <div>
+                    <input id="vehicle_make" name="vehicle_make" ng-model="vehicle.make" type="text" class="form-control" required />
+                  </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error':newVehicle.vehicle_model.$invalid}">
+                  <label for="vehicle_model">Model</label>
+                  <div>
+                    <input id="vehicle_model" name="vehicle_model" ng-model="vehicle.model" type="text" class="form-control" required />
+                  </div>
+                </div>
+                <div class="form-group" ng-class="{'has-error':newVehicle.vehicle_vin.$invalid}">
+                  <label for="vehicle_vin">Last 8 Of VIN</label>
+                  <div>
+                    <input id="vehicle_vin" name="vehicle_vin" ng-model="vehicle.vin" type="text" class="form-control" required />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-small btn-primary" ng-click="vehicle.editable = 0" ng-disabled="vform.$invalid">Save</button>
+                  <button class="btn btn-small btn-danger" ng-click="removeVehicle(vehicle)">Remove</button>
+                </div>
+                </ng-form>
+                <hr />
+              </div>
+            </div>
+          </div>
+          <div class="clearfix" ng-show="company.subscription_plan == 'subout-pro-service'">
+              <button class="btn btn-success" ng-click="addVehicle({'editable': 1})" ng-disabled="vehicleForm.$invalid"><span class="icon icon-plus"></span>Add Vehicle <span ng-show="companyProfile.vehicles.length >= 2">(+${{subout_bus_price}})</span></button>
+              <button class="btn btn-primary" ng-click="saveVehicles()" ng-show="companyProfile.vehicles.length > 0" ng-disabled="vehicleForm.$invalid">Register Vehicles</button>
+          </div>
+        </form>
+      </div>
+
+      <div ng-class="{active:selectedTab == 'others'}" class="tab-pane" id="others">
+        <form name="settingsOther" novalidate>
+          <fieldset>
+            <p class="alert alert-danger" ng:show="companyProfileError">{{companyProfileError}}</p>
+
+            <div class="form-group">
+              <label for="poster-message">Message to bidder</label>
+              <div>
+                <textarea id="poster-message" name="poster_message" type="text" class="form-control" ng:model="companyProfile.poster_message"></textarea>
+              </div>
+            </div>
+
+            <hr />
+            <div class="form-group">
+              <button ui-turn-off="modal1" class="btn btn-default">Close</button>
+              <button class="btn btn-primary" ng-click="saveCompanyProfile()" ng-disabled="settingsFleet.$invalid">Save</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

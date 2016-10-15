@@ -1,0 +1,22 @@
+.container
+  %h3= @email_template.to_s
+  = bootstrap_form_for @email_template, url: admin_email_template_path(@email_template.id), html: { class: "form-horizontal" } do |f|
+    = f.hidden_field :id
+    = f.collection_select :category, EmailTemplate::CATEGORIES, :to_s, :to_s
+    = f.text_area :description, rows: 8
+    = f.text_field :subject
+    = f.text_area :body, rows: 10
+    = f.form_group do
+      = f.label :preview, class: "control-label"
+      
+      = f.submit "Preview", class: "btn btn-info", name: 'preview'
+      
+      %br
+      %strong= @email_template.subject_to_string
+      %br
+      %br
+      = @email_template.body_to_html.html_safe
+    .form-actions
+      .pull-right
+        = f.submit "Update", class: "btn btn-danger", name: 'submit'
+        = link_to "Cancel", admin_email_templates_path, class: "btn"

@@ -1,0 +1,24 @@
+%h1 Favorite Invitations
+
+%table#subscriptions.table.table-striped
+  %thead
+    %tr
+      %th #
+      %th Identifier
+      %th Sent at
+      %th Email
+      %th Name
+      %th Sender
+      %th Accepted
+      %th
+  %tbody
+    - @invitations.each_with_index do |invitation, index|
+      %tr
+        %td= index + 1
+        %td= invitation.id
+        %td= invitation.created_at
+        %td= invitation.supplier_email
+        %td= invitation.supplier_name
+        %td= invitation.buyer.name
+        %td= invitation.accepted
+        %td= link_to "Resend", resend_invitation_admin_favorite_invitation_path(invitation), method: "put", class: "btn btn-primary" unless invitation.accepted

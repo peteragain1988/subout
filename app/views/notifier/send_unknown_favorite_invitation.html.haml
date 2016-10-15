@@ -1,0 +1,5 @@
+%p Dear #{@invitation.supplier_name},
+%p #{@invitation.message}
+%p #{@buyer.name} has added your company#{"(#{@invitation.supplier_name})" if @invitation.supplier_name} as a favorite on SubOut.
+%p To accept this invitation, please click #{link_to "here", "https://#{CHARGIFY_URI}/h/#{CHARGIFY_BASIC_PRODUCT_ID}/subscriptions/new?email=#{@invitation.supplier_email}&organization=#{@invitation.supplier_name}"}
+= render 'email_sig'

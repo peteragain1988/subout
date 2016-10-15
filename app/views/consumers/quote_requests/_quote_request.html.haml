@@ -1,0 +1,32 @@
+%h3 Your quote request
+= @quote_request.to_html.html_safe
+
+%h3 Quotes
+%table.table
+  %thead
+    %th Company
+    %th Price
+    %th Comments
+    %th Vehicle(s)
+    %th Actions
+  - @quote_request.quotes.each do |quote|
+    %tr{ class: "#{ 'alert-success' if quote.id==@quote_request.winning_quote_id or quote.reference_number == params[:quote_reference_number] }"}
+      %td
+        %p
+          %strong Name:
+          #{quote.quoter.name}
+        %p
+          %strong Email:
+          #{quote.quoter.email}
+        %p
+          %strong Phone:
+          #{quote.quoter.contact_phone}
+      %td $#{quote.amount}
+      %td #{quote.comment}
+      %td #{quote.vehicles_html.html_safe}
+      %td
+        - if !@quote_request.awarded?
+          = button_to "Accept", select_winner_consumers_quote_request_path(@quote_request), params: { quote_reference_number: params[:quote_reference_number], retailer_id: params[:retailer_id], consumer_email: params[:consumer_email] }, data: { confirm: "Are you sure to accept?" }, class: 'btn btn-success'
+        - else
+          - if quote.id==@quote_request.winning_quote_id
+            Awarded

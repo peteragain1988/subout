@@ -1,0 +1,275 @@
+ul {
+  margin:0px;
+  padding:0px;
+}
+ul {
+  li {
+    list-style:none;
+  }
+}
+a, a:active {
+  outline:none;
+}
+h5 {
+  text-transform: uppercase;
+  font-size:1.1em;
+  color:#686552;
+}
+body {
+  color: @black;
+  background:#bfbfbf;
+}
+#pageWrapper {
+  position:relative;
+  background:#FFFFFF;
+}
+.inner {
+  padding:0px 3%;
+}
+#topbar {
+  background: #c7c6b2;
+  vertical-align: middle;
+  height:50px;
+  line-height:50px;
+}
+#toolbar {
+  margin-bottom:10px;
+}
+#btn_back {
+  margin-left:20px;
+}
+#btn_next {
+  margin-left:20px;
+}
+#btn_close {
+  margin-left:35px;
+}
+#search {
+  text-align:center;
+  border:1px solid #000000;
+  height:30px;
+  background:#FFFFFF;
+  text-align:center;
+  line-height:30px;
+  img {
+    margin:3px;
+  }
+  input {
+    float:left;
+    height:100%;
+    outline:none;
+    border:none;
+  }
+}
+#header {
+  margin:2rem 0px;
+}
+#navigator {
+  text-align:right;
+  font-size:1.1em;
+  margin-top:3em;
+  a {
+    border-right:1px solid #333;
+    padding:0px 0.5em;
+    text-decoration:none;
+  }
+  a:last-child {
+    border:none;
+  }
+  a:hover {
+    color:#85c265;
+  }
+}
+#content {
+  padding:0px 40px;
+}
+#sign-in-form {
+  margin-bottom:40px;
+}
+#dashboard {
+  section.title {
+    margin-bottom:10px;
+  }
+  #company {
+    #company_name {
+      text-align: center;
+    }
+    #company_logo {
+      text-align: center;
+      padding:10px;
+    }
+  }
+}
+#activities {
+  .table-striped {
+    tbody {
+      tr:nth-child(2n+1) {
+        td {
+          background-color: #d8e7d0;
+        }
+      }
+    }
+  }
+  .table {
+    td {
+      padding:10px;
+      font-size:0.9em;
+    }
+  }
+  .opportunity-title {
+    color:#75b952;
+  }
+}
+#filters {
+  .filter {
+    text-align:left;
+    margin-bottom:5px;
+    cursor:pointer;
+    &:not(.active) {
+      background: none!important;
+    }
+    .color {
+      width:2em;
+      height:2em;
+    }
+    .status {
+      background: url(../img/filters/none-active.png) no-repeat left center;
+      width:2em;
+      height:2em;
+    }
+    .name {
+      line-height:2em;
+    }
+    .filter-icon {
+      width:12%;
+      float:left;
+      overflow:hidden;
+      margin-right:3%;
+      img {
+        width:100%;
+      }
+    }
+  }
+  .filter.active {
+    .status {
+      background: url(../img/filters/active.png) no-repeat left center;
+    }
+  }
+  .filter.noneactive {
+    background:none!important;
+  }
+}
+#tags {
+  .tag {
+    margin-bottom:0.3em;
+    cursor:pointer;
+  }
+}
+
+#company.well {
+  padding: 10px;
+}
+div#company_links {
+  text-align: center;
+}
+div.created-at {
+  text-align: right;
+  font-size: .8em;
+  color: #666;
+}
+div.buyer {
+  font-size: .8em;
+  color: @darkGray;
+  span.buyer-name {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+div.bidding-ends-on {
+  font-size: .9em;
+  font-weight: bold;
+  text-align: right;
+}
+div.bidder {
+  font-size: .8em;
+  color: @darkGray;
+  span.bidder-name {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}
+span.bid-amount {
+  font-weight: bold;
+}
+tr.event {
+  div.actions {
+    text-align: right;
+  }
+}
+div.data-items {
+  font-size: .8em;
+  color: @darkGray;
+  span.data {
+    font-weight: bold;
+  }
+}
+
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  line-height: 20px;
+}
+select {
+  height: 30px;
+  line-height: 30px;
+}
+textarea {
+  line-height: 28px;
+}
+.control-group.error .help-block {
+  color: @lightGray;
+}
+.help-block,
+.help-inline {
+  color: #555555;
+}
+
+
+.well {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: #FFFFFF;
+  border: 2px solid @lightGray;
+}
+
+
+.table th, .table td {
+  border-top: 1px solid @lightGray;
+}
+
+a {
+  color: @skyBlue;
+
+  &:hover {
+    color: @skyBlue;
+  }
+}
+
+.form-inline{
+  .form-group{
+    .btn-group{ width: 100%; }
+  }
+}

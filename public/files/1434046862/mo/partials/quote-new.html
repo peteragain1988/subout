@@ -1,0 +1,141 @@
+<div id="bid-new" ng-controller="QuoteNewCtrl">
+  <div class="modal-header">
+    <button class="close" 
+            ui-turn-off="modal1">&times;</button>
+    <h4 class="modal-title">Customer Quote</h4>
+  </div>
+  <div class="modal-body">
+    <form name="newQuote" class="section">
+      <div class="alert alert-info" ng-show="company.isFreeUser()">
+        Your subscription plan is 'free' plan. You can bid only 5 times a month. <br />
+        This month's bid count: {{ company.month_bids_count }} <br />
+        <a ng-click="displaySettings('vehicles')" style="text-decoration: underline">
+        Please upgrade your subscription plan to bid more.
+        </a>
+      </div>
+      <div class="alert alert-danger" ng-show="errors">
+        <a class="close" ng-click="hideAlert()">&times;</a>
+        <ul ng-repeat="error in errors">
+          <li ng-bind-html-unsafe="error"></li>
+        </ul>
+      </div>
+
+      <div class="form-group oportunity_name">
+        <label>Opportunity</label>
+        <div>
+          <h4>{{quote_request.name}}</h4>
+        </div>
+      </div>
+
+      <div class="form-group quote_amount" ng-class="{'has-error':newQuote.quote_amount.$invalid || !validateReserveAmount(quote.amount)}">
+        <label for="quote_amount">Bid Amount ($) *</label>
+        <div>
+          <input type="text"
+                 id="quote_amount"
+                 name="quote_amount"
+                 required
+                 ng-model="quote.amount"
+                 ui-validate="{ only_numbers: 'validateNumber($value)' }"
+                 size="10"
+                 maxlength="10"
+                 class="form-control">
+
+          <p ng-show="newQuote.quote_amount.$error.only_numbers" class="help-block">Enter only numeric characters.</p>
+        </div>
+      </div>
+
+      <div class="form-group" ng-class="{'has-error':newQuote.quote_vehicle_count.$invalid}" ng-if="quote_request.vehicle_count > 1">
+        <label for="quote_vehicle_count">
+          Vehicle count *
+        </label>
+        <div>
+          <input type="text"
+                 id="quote_vehicle_count"
+                 name="quote_vehicle_count"
+                 ng-model="quote.vehicle_count"
+                 ui-validate="{ only_numbers: 'validateOptionalNumber($value)', vehicle_count: 'validateVehicleCountLimit($value)'}"
+                 size="10"
+                 maxlength="10"
+                 value=""
+                 required
+                 class="form-control">
+          <span ng-show="quote_request.reserve_amount">(Vehicles needed: {{quote_request.vehicle_count}})</span>
+          <p ng-show="newQuote.quote_vehicle_count.$error.only_numbers" class="help-block">Enter only numeric characters.</p>
+          <p ng-show="newQuote.quote_vehicle_count.$error.vehicle_count" class="help-block">Vehicle count cannot be greater than poster needs.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quote_comment">Brag about your company here</label>
+        <div>
+          <textarea id="quote_comment" name="quote_comment" ng-model="quote.comment" class="form-control"></textarea>
+        </div>
+      </div>
+
+      <hr/>
+
+      <h5>Vehicles</h5>
+      <div ng-repeat="vehicle in quote.vehicles" class="well">
+        <ng-form name="vform" class="row" style="margin: 0;">
+          <div class="form-group">
+            <label>Bus year*</label>
+            <input type="text"
+                   ng-model="vehicle.year"
+                   ui-validate="{ only_numbers: 'validateOptionalNumber($value)' }"
+                   size="10"
+                   maxlength="10"
+                   required
+                   class="form-control">
+          </div>
+          <div class="form-group">
+            <label>Bus type*</label>
+            <p>
+              <select id="bid_vehicle_type" class="form-control" name="bid_vehicle_type" ng-model="vehicle.type" ng-options="t for t in VEHICLE_TYPES">
+                <option value="">Other</option>
+              </select>
+            </p>
+            <div ng-if="!vehicle.type">
+              <input type="text"
+                     id="bid_vehicle_type_other"
+                     name="bid_vehicle_type_other"
+                     ng-model="vehicle.type_other"
+                     size="10"
+                     maxlength="10"
+                     class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Passenger count *</label>
+            <input type="text"
+                   ng-model="vehicle.passenger_count"
+                   ui-validate="{ only_numbers: 'validateOptionalNumber($value)' }"
+                   size="10"
+                   maxlength="10"
+                   required
+                   class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="bid_vehicle_gratuity_included" class="checkbox">
+                <input id="bid_vehicle_gratuity_included" type="checkbox" ng-model="vehicle.gratuity_included" value="1">
+                Is graduity included?
+            </label>
+          </div>
+        </ng-form>
+      </div>
+
+
+      <div id="poster-message" class="help-block"><div class="inner text-danger" ng-bind-html-unsafe="quote_request.buyer_message"></div></div>
+
+      <div class="form-group">
+        <div class="col-md-offset-4 col-md-8">
+          <div>
+            <button ui-turn-off="modal1" class="btn btn-default">Close</button>
+            <button ng-click="save()" class="btn btn-success" ng-disabled="newQuote.$invalid">
+              Quote Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

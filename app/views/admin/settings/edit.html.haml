@@ -1,0 +1,19 @@
+%h3= @setting.to_s
+- if @setting.errors.any?
+  - @setting.errors.full_messages.each do |error|
+    .alert.alert-error
+      = error
+.span7
+  = form_for @setting, url: admin_setting_path(@setting.id), html: { class: "form-horizontal" } do |f|
+    = f.hidden_field :id
+    .control-group
+      = f.label :value, @setting.label, class: "control-label"
+      .controls
+        - if @setting.key == 'admin_email'
+          = f.text_field :value
+        - else
+          = f.text_area :value, class: "input-xlarge", rows: 10, cols: 80,  data: { maxlength: 2000 }
+
+    .form-actions
+      = f.submit "Update", class: "btn btn-danger"
+      = link_to "Cancel", admin_settings_path, class: "btn"

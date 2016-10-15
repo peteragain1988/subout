@@ -1,0 +1,20 @@
+%h2 Email Templates
+%p
+  If you want to change email templates(signup, receipt, status, card expiration, end of trial, upcoming renewal) from chargify, please go to 
+  = link_to 'here', 'https://subout.chargify.com/settings', target: '_blank'
+  and change them.
+%table.table.table-stripe.table-bordered
+  %tr
+    %th Name
+    %th Category
+    %th Subject 
+    %th Description
+    %th
+  - EmailTemplate.all.order_by(category: :asc).each do |email_template|
+    %tr
+      %td= email_template.to_s
+      %td= email_template.category
+      %td= email_template.subject
+      %td= email_template.description
+      %td= link_to "Edit", edit_admin_email_template_path(email_template.id), class: 'btn btn-primary'
+

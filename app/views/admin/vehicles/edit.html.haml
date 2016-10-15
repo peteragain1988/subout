@@ -1,0 +1,26 @@
+.span6
+  %h2
+    #{@company.name}'s vehicle
+  = form_for @vehicle, url: admin_company_vehicle_path(@company, @vehicle), html: { class: "form-horizontal" } do |f|
+    - if @vehicle.errors.any?
+      - @vehicle.errors.full_messages.each do |msg|
+        = msg
+        %br
+    .control-group
+      = f.label :year, class: "control-label"
+      .controls= f.select :year, (1990..Date.today.year)
+    .control-group
+      = f.label :make, class: "control-label"
+      .controls= f.text_field :make
+    .control-group
+      = f.label :model, class: "control-label"
+      .controls= f.text_field :model
+    .control-group
+      = f.label :vin, class: "control-label"
+      .controls= f.text_field :vin
+    .control-group
+      = f.label :rm_number, class: "control-label"
+      .controls= f.text_field :rm_number
+    .control-group.pull-right
+      = f.submit "Save", class: "btn btn-primary"
+      = link_to "Cancel", :back, class: "btn"

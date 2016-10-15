@@ -1,0 +1,137 @@
+- opportunity = OpportunitySerializer.new(@offer.opportunity).as_json
+- opportunity = OpenStruct.new(opportunity)
+- opportunity.buyer = OpenStruct.new(opportunity.buyer)
+
+#opportunity-show
+  .alert.alert-info
+    Hi, You got invitation on a charter from #{opportunity.buyer.name}.  You have limited access to this page. This page will be expired soon.
+  .row
+    .col-sm-3
+      %h3 Open chaters in #{opportunity.start_location}
+      %h4
+        = Opportunity.active.where(start_location: opportunity.start_location).count
+        Charters
+
+      %p
+        %br
+        %strong
+          To bid on all open jobs
+        %a.btn.btn-primary.form-control{href: "http://subout.com/pricing.php", target: '_blank'} Join Now
+
+      %p
+        Call for questions: 718-273-0492
+    .col-sm-1
+    .col-sm-6
+      .row
+        %h3
+          = opportunity.name
+        %ul
+          %li
+            %span.label-field Pick up time:
+            = opportunity.start_date
+            = opportunity.start_time
+          %li
+            %span.label-field Pick up location:
+            = opportunity.start_location
+          %li
+            %span.label-field Drop off time:
+            = opportunity.end_date
+            = opportunity.end_time
+          %li
+            %span.label-field Drop off location:
+            = opportunity.end_location
+
+        - if opportunity.is_for_special_region
+          %div
+            %span.label-field Location:
+            = opportunity.special_region
+        - if !opportunity.trip_type.blank?
+          %div
+            %span.label-field Trip Type:
+            = opportunity.trip_type
+
+        %div
+          %span.label-field Vehicle Type:
+          = opportunity.vehicle_type
+
+        %div
+          %span.label-field Total Number Of Vehicles Needed:
+          = opportunity.vehicle_count
+
+        %div
+          %span.label-field Created:
+          = opportunity.created_at
+
+        %div
+          %span.label-field SO#:
+          = opportunity.reference_number
+        - if !opportunity.contact_phone.blank?
+          %div
+            %span.label-field Contact phone:
+            = opportunity.contact_phone
+
+        %div
+          %span.label-field Bidding ends:
+          = opportunity.bidding_ends_at
+        
+        - if opportunity.reserve_amount
+          %div
+            %span.label-field Starting price:
+            = opportunity.reserve_amount
+        .description
+          %div
+            %strong Description
+          .content= opportunity.description
+          .help-block
+            .text-danger
+              = opportunity.buyer_message
+        %hr
+        %h5 OFFERED BY
+        .company-info
+          %p
+            - if !opportunity.buyer.logo_url.blank?
+              = image_tag opportunity.buyer.logo_url
+            - else
+              No Logo Available
+          %div
+            %strong
+              = opportunity.buyer.abbreviated_name
+          %div
+            = opportunity.buyer.email
+          %div
+            = opportunity.buyer.contact_phone
+        %hr
+
+        %h3
+          Offer Information
+        %h4
+          Amount: $#{@offer.amount}
+        %h4
+          Vehicle type: #{@offer.vehicle_type}
+
+        - if @offer.is_active?
+          %hr
+          .actions
+            .clearfix
+              .pull-left
+                = button_to "Accept this Opportunity", {action: 'accept', token: @offer.token}, {class: 'btn btn-primary', method: :put}
+              .pull-left
+                &nbsp;
+              .pull-left
+                = button_to "Decline this Opportunity", {action: 'decline', token: @offer.token}, {class: 'btn btn-danger', method: :put}
+
+            %br
+
+            - if @offer.vendor.total_won_amount > 2000
+              %div.alert.alert-success
+                %p You have won 20k, to win this next job click here to be connected to subout membership office
+                %br
+                .row
+                  .col-sm-3
+                    %a.btn.btn-primary.form-control{href: "http://subout.com/pricing.php", target: '_blank'} Join Now
+        %br
+        %br
+        %br
+    .col-sm-2
+      %h3 Total awarded last year
+      %h4= number_to_currency(Bid.won.sum(&:amount) + Offer.accepted.sum(&:amount))

@@ -1,0 +1,9 @@
+!!!
+%html{ lang: "en" }
+  %head
+    = render :partial => "mails"
+  %body
+    #wrapper
+      = yield
+
+    = render :partial => "email_sig"

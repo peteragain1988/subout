@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Opportunity API</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/api/doc/assets/stylesheets/bootstrap.css"/>
+    <link rel="stylesheet" href="/api/doc/assets/stylesheets/codemirror.css"/>
+    <link rel="stylesheet" href="/api/doc/assets/stylesheets/application.css"/>
+    <script src="/api/doc/assets/javascripts/jquery-1-7-2.js"></script>
+    <script src="/api/doc/assets/javascripts/codemirror.js"></script>
+    <script src="/api/doc/assets/javascripts/mode/css/css.js"></script>
+    <script src="/api/doc/assets/javascripts/mode/htmlmixed/htmlmixed.js"></script>
+    <script src="/api/doc/assets/javascripts/mode/javascript/javascript.js"></script>
+    <script src="/api/doc/assets/javascripts/mode/xml/xml.js"></script>
+    <script>
+      function mirror(textarea, contentType, options) {
+        $textarea = $(textarea);
+        if ($textarea.val() != '') {
+          if(contentType.indexOf('json') >= 0) {
+            $textarea.val(JSON.stringify(JSON.parse($textarea.val()), undefined, 2));
+            options.json = true;
+            options.mode = 'javascript';
+          } else if (contentType.indexOf('javascript') >= 0) {
+            options.mode = 'javascript';
+          } else if (contentType.indexOf('xml') >= 0) {
+            options.mode = 'xml';
+          } else {
+            options.mode = 'htmlmixed';
+          }
+        }
+        return CodeMirror.fromTextArea(textarea, options);
+      };
+
+      $(function(){
+        $(".request.body").each(function(i, el) {
+          el = $(el);
+          mirror(el.find("textarea")[0], el.data("content-type"), { "readOnly": true, "lineNumbers": true });
+        });
+        $(".response.body").each(function(i, el) {
+          el = $(el);
+          mirror(el.find("textarea")[0], el.data("content-type"), { "readOnly": true, "lineNumbers": true });
+        });
+      });
+    </script>
+    <style>
+      td.required .name:after {
+        float: right;
+        content: "required";
+        font-weight: normal;
+        color: #F08080;
+      }
+
+      p {
+        padding: 15px;
+        font-size: 130%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Opportunity API</h1>
+
+      <div class="article">
+        <h2>Create Quick Winnable</h2>
+        <h3>POST /api/v1/auctions.json</h3>
+
+          <h3>Parameters</h3>
+          <table class="parameters table table-striped table-bordered table-condensed">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="required">
+                  <span class="name">api_token</span>
+                </td>
+                <td>
+                  <span class="description">Authentication token</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">name</span>
+                </td>
+                <td>
+                  <span class="description">Name</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">type</span>
+                </td>
+                <td>
+                  <span class="description">Type (Vehicle Needed, Vehicle for Hire, Special, Emergency, Buy or Sell Parts and Vehicles)</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">description</span>
+                </td>
+                <td>
+                  <span class="description">Description</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">start_location</span>
+                </td>
+                <td>
+                  <span class="description">Original terminal or address</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="name">end_location</span>
+                </td>
+                <td>
+                  <span class="description">Destination</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="name">tracking_id</span>
+                </td>
+                <td>
+                  <span class="description">Internal Memo or ID#</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">start_date</span>
+                </td>
+                <td>
+                  <span class="description">Departure date</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">start_time</span>
+                </td>
+                <td>
+                  <span class="description">Departure time</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">end_date</span>
+                </td>
+                <td>
+                  <span class="description">Arrival date</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">end_time</span>
+                </td>
+                <td>
+                  <span class="description">Arrival time</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="required">
+                  <span class="name">bidding_duration_hrs</span>
+                </td>
+                <td>
+                  <span class="description">Duration in hours</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="name">quick_winnable</span>
+                </td>
+                <td>
+                  <span class="description">Enable win it now</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="name">win_it_now_price</span>
+                </td>
+                <td>
+                  <span class="description">Win it now price in USD. Required if quick winnable</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="name">for_favorites_only</span>
+                </td>
+                <td>
+                  <span class="description">Limit view to favorite only</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="name">forward_auction</span>
+                </td>
+                <td>
+                  <span class="description">False to buy and true to sell</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="name">contact_phone</span>
+                </td>
+                <td>
+                  <span class="description">Contact phone for emergency opportunity. Required if type is Emergency</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Request</h3>
+
+          <h4>Headers</h4>
+          <pre class="request headers">Host: example.org
+Content-Type: application/x-www-form-urlencoded
+Cookie: 
+Origin: </pre>
+
+          <h4>Route</h4>
+          <pre class="request route highlight">POST /api/v1/auctions.json</pre>
+
+
+            <h4>Body</h4>
+            <div class="request body" data-content-type="application/json; charset=utf-8"><textarea>{"api_token":"V7V9qRAVhyJ4WbYmDKsX","opportunity":{"name":"Coach Bus 49, Brooklyn, NY, 02/22","type":"Vehicle Needed","description":"Party Size: 30-40g\nOne Way Miles: 10.6g\nTotal Miles: 43.8g","start_location":"7912 3rd Avenue, Brooklyn, NY 11209","end_location":"697 Forest Avenue, Staten Island, NY 10314","tracking_id":"#102631","start_date":"2013/02/22","start_time":"10:00","end_date":"2013/02/22","end_time":"22:00","bidding_duration_hrs":"10","quick_winnable":"true","win_it_now_price":"1000","for_favorites_only":"false","forward_auction":"false","contact_phone":""}}</textarea></div>
+
+
+            <h3>Response</h3>
+            <h4>Headers</h4>
+            <pre class="response headers">Content-Type: application/json; charset=utf-8
+Location: http://example.org/api/v1/opportunities/29IVPNU
+X-UA-Compatible: IE=Edge,chrome=1
+ETag: &quot;81d1c4f6d8912d3f466741ed1e4fb77f&quot;
+Cache-Control: max-age=0, private, must-revalidate
+X-Request-Id: 33ceb38ce9a9195a69df331dd690b09d
+X-Runtime: 0.060890
+Content-Length: 1214</pre>
+            <h4>Status</h4>
+            <pre class="response status">201 Created</pre>
+              <h4>Body</h4>
+              <div class="response body" data-content-type="application/json; charset=utf-8"><textarea>{ "payload":{"_id":"51225cdc06557351ad000019","name":"Coach Bus 49, Brooklyn, NY, 02/22","description":"Party Size: 30-40g\nOne Way Miles: 10.6g\nTotal Miles: 43.8g","start_date":"2013/02/22","start_time":"10:00","for_favorites_only":false,"start_region":"Massachusetts","end_region":"Massachusetts","end_date":"2013/02/22","end_time":"22:00","bidding_duration_hrs":"10","bidding_ends_at":"2013-02-19T02:54:52+00:00","bidding_done":false,"quick_winnable":true,"bidable":true,"image_id":null,"winning_bid_id":null,"win_it_now_price":"1000.00","type":"Vehicle Needed","canceled":false,"forward_auction":false,"winner":null,"tracking_id":"#102631","reference_number":"29IVPNU","buyer_name":"Company Name 3","buyer_abbreviated_name":"AN-3","image_url":null,"large_image_url":null,"start_location":"7912 3rd Avenue, Brooklyn, NY 11209","end_location":"697 Forest Avenue, Staten Island, NY 10314","created_at":"2013-02-18T16:54:52Z","status":"In progress","buyer_id":"51225cdc06557351ad000014","contact_phone":"","highest_bid_amount":null,"lowest_bid_amount":null,"buyer":{"_id":"51225cdc06557351ad000014","name":"Company Name 3","abbreviated_name":"AN-3","logo_url":null},"bids":[]}, "version":1.5, "deploy":1361088178}</textarea></div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,185 @@
+<div id="sidebar" class="filters" ui-content-for="sidebar-right">
+  <div class="col-sm-12">
+    <h4>Filter My View By:</h4>
+
+
+    <div id="pills" class="clearfix" ng-show="hasAnyFilter()">
+      <div class="pill" ng-show="$location.search().opportunity_type">
+        {{$location.search().opportunity_type}}<button type="button" ng-click="setOpportunityTypeFilter($location.search().opportunity_type)" class="close">×</button>
+      </div>
+      <div class="pill" ng-show="$location.search().event_type">
+        {{eventTypeLabel($location.search().event_type)}}<button type="button" ng-click="setEventType($location.search().event_type)" class="close">×</button>
+      </div>
+      <div class="pill region" ng-repeat="region in filterRegions">
+        {{region}}<button type="button" ng-click="removeRegionFilter(region)" class="close">×</button>
+      </div>
+      <div class="pill" ng-show="$location.search().q">
+        {{$location.search().q}}<button type="button" ng-click="query=null;fullTextSearch()" class="close">×</button>
+      </div>
+      <a class="clear-filters" ng-click="clearFilters()">
+        Clear All
+      </a>
+    </div>
+
+
+    <section>
+      <section class="title"><h5>Search By</h5></section>
+      <div id="search">
+        <input id="search-listing" class="col-md-11 col-sm-10 col-xs-9" ui-keypress="{13:'fullTextSearch($event)'}" ng-model="query" placeholder="Search listings for..."/>
+        <div class="glyphicon glyphicon-search"></div>
+      </div>
+    </section>
+
+    <section id="filters">
+      <section class="title"><h5>Opportunity Type</h5></section>
+      <section class="content">
+        <ul>
+          <li ng-repeat="filter in filters" class="filter" ng-class="{active: $location.search().opportunity_type == filter.name, red: filter.active_red}"
+          title="{{filter.name}}">
+          <i class="glyphicon {{filter.icon}}"></i> <a ng-click="setOpportunityTypeFilter(filter.name)">{{filter.name}}</a>
+          </li>
+
+          <li class="filter" ng-class="{active: $location.search().opportunity_type == 'Quote Request', red: false}"
+            title="Quote Request">
+            <i class="glyphicon glyphicon-user"></i> <a ng-click="setOpportunityTypeFilter('Quote Request')">Consumer Quote Request</a>
+            <i class="label label-danger">{{available_quote_request_count}}</i>
+          </li>
+        </ul>
+      </section>
+    </section>
+    <section id="event_types">
+      <section class="title"><h5>Event Type</h5></section>
+      <section class="content">
+        <ul>
+          <li class="filter" ng-class="{active: $location.search().event_type == 'opportunity_created'}"><a ng-click="setEventType('opportunity_created')">New Opportunities</a></li>
+          <li class="filter" ng-class="{active: $location.search().event_type =='bid_created'}"><a ng-click="setEventType('bid_created')">Recent Bids</a></li>
+          <li class="filter" ng-class="{active: $location.search().event_type =='opportunity_canceled'}"><a ng-click="setEventType('opportunity_canceled')">Cancellations</a></li>
+        </ul>
+      </section>
+    </section>
+    <section id="regions">
+      <section class="title"><h5>Region</h5></section>
+      <section  class="content">
+        <select class="form-control"  ng-model="regionFilter">
+          <option value="" selected="selected">-- Select Region --</option>
+          <option ng-repeat="r in regionFilterOptions" value={{r}} data-abbreviated_name="{{r}}">{{r}}</option>
+        </select>
+        <div class="clearfix"></div>
+      </section>
+    </section>
+    <hr/>
+    <section>
+      <a href="" ui-toggle="uiSidebarRight" class="btn btn-primary"><i class="glyphicon glyphicon-search"></i> CLOSE</a>
+    </section>
+  </div>
+</div>
+
+<div ui-content-for="title">
+  <span>Activities</span>
+</div>
+
+<div ui-content-for="footer">
+  <div class="btn-group justified">
+    <a href="" ui-turn-on="modal1" class="btn btn-navbar" ng-click="setOpportunity({}); displayNewOpportunityForm()"><i class="glyphicon glyphicon-plus"></i> Post new opportunity</a>
+    <a href="" ui-toggle="uiSidebarRight" class="btn btn-navbar"><i class="glyphicon glyphicon-search"></i> Filter</a>
+  </div>
+</div>
+
+<div class="scrollable">
+  <div class="scrollable-content" ui-scroll-bottom="loadMoreEvents()">
+    <div id="dashboard" class="col-sm-12">
+      <br/>
+      <div class="alert alert-info">
+        <span class="display-message-extra">Welcome</span>
+        <span class="company display-message-subject">{{company.name}}!</span>,
+        <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+      </div>
+
+      <div class="alert alert-info" ng-show="company.canAddFreeBuses()">
+          Your subscription includes Roadside Assistance for 2 of your vehicles. 
+          <a href="" ui-turn-on="modal1" ng-click="displaySettings('vehicles')" style="text-decoration:underline;">Click here to register your vehicles</a>
+      </div>
+      <section>
+        <div id="toolbar">
+          <div class="info-label-heading">
+            <span ng-show="hasAnyFilter()">Events View Filtered By:</span>
+            <span ng-hide="hasAnyFilter()">All Events:</span>
+          </div>
+          <div id="pills" class="form-group clearfix" ng-show="hasAnyFilter()">
+            <div class="pill" ng-show="$location.search().opportunity_type">
+              {{$location.search().opportunity_type}}<button type="button" ng-click="setOpportunityTypeFilter($location.search().opportunity_type)" class="close">×</button>
+            </div>
+            <div class="pill" ng-show="$location.search().event_type">
+              {{eventTypeLabel($location.search().event_type)}}<button type="button" ng-click="setEventType($location.search().event_type)" class="close">×</button>
+            </div>
+            <div class="pill region" ng-repeat="region in filterRegions">
+              {{region}}<button type="button" ng-click="removeRegionFilter(region)" class="close">×</button>
+            </div>
+            <div class="pill" ng-show="$location.search().q">
+              {{$location.search().q}}<button type="button" ng-click="query=null;fullTextSearch()" class="close">×</button>
+            </div>
+            <a class="clear-filters" ng-click="clearFilters()">
+              Clear All
+            </a>
+          </div>
+        </div>
+        <section id="activity-stream">
+          <!-- mobile view event stream -->
+          <div>
+            <div ng-repeat="event in events"
+              ng-init="opportunity=event.eventable; actor=event.actor; action=event.action">
+              <div ng-if="isPublicEvent(event)">
+                  <table class="table table-border event" ng-class="{expanded: event.selected, owner: event.actor._id == company._id, 'quote-request': event.eventable.for_quote_only==true}">
+                    <tr>
+                      <td>
+                        <i class="glyphicon {{opportunity.icon}}" ng-if="event.eventable.for_quote_only==false"></i>
+                        <i class="glyphicon icon-quote-request glyphicon-hand-up" ng-if="event.eventable.for_quote_only!=false"></i>
+                        <span class='created-at timeago' ng-cloak relative-time title="{{event.created_at}}">{{event.created_at|date}}</span>
+                      </td>
+                      <td>
+                        <div class="pull-right">
+                          <a class="reference-number" ng-click="refNumSearch(event.eventable.reference_number)">#{{event.eventable.reference_number}}</a>
+                          
+                          <a ng-if="event.eventable.for_quote_only==false" href="#/opportunities/{{event.eventable.reference_number}}" title="{{opportunity.name}}">
+                            <i class="glyphicon glyphicon-chevron-right"></i>
+                          </a>
+                          <a ng-if="event.eventable.for_quote_only!=false" href="#/quote_requests/{{event.eventable.reference_number}}" title="{{opportunity.name}}">
+                            <i class="glyphicon glyphicon-chevron-right"></i>
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan='2'>
+                        <span class="event-region table-header" ng-cloak ng-if="!opportunity.is_for_special_region">{{ALL_REGIONS[opportunity.start_region]}}-&gt;{{ALL_REGIONS[opportunity.end_region]}}</span>
+                        <span class="event-region table-header" ng-cloak ng-if="opportunity.is_for_special_region">{{opportunity.special_region}}</span>
+                        <span class="event-action" ng-cloak>
+                          {{actionDescription(action)}}
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <span class="opportunity-name">
+                          <a ng-if="event.eventable.for_quote_only==false" href="#/opportunities/{{event.eventable.reference_number}}" title="{{opportunity.name}}">
+                            {{opportunity.name}}
+                          </a>
+                          <a ng-if="event.eventable.for_quote_only!=false" href="#/quote_requests/{{event.eventable.reference_number}}" title="{{opportunity.name}}">
+                            {{opportunity.name}}
+                          </a>
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+              </div>
+            </div>
+          </div>
+          <!-- end here -->
+        </section>
+        <div class="load-more" ng-hide="noMoreEvents">
+          <span ng-show="loading" class="content-loading-animation"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,52 @@
+%h1= @subscription.name
+%h4
+  = "Organization: #{@subscription.organization}"
+  %br
+  = "Chargify ID: #{@subscription.subscription_id}"
+  %br
+  = "Status: #{@subscription.state}"
+
+%p
+  %label Terms and conditions:
+  - if @subscription.tac_agreement
+    %span.label.label-info Accepted
+    - if @subscription.tac_agreement_at
+      ,
+      %label accepted at:
+      = @subscription.tac_agreement_at
+  - else
+    %span.label.label-warning Not Accepted
+
+- if @subscription.created_company.present?
+  %p
+    %label Signed up company:
+    = link_to @subscription.created_company_name, edit_admin_company_path(@subscription.created_company.id)
+    ,
+    %label created at:
+    = @subscription.created_company.created_at
+
+- if @subscription.exists_on_chargify?
+  = form_for @subscription, url: admin_gateway_subscription_path(@subscription), html: { class: "form-vertical edit_gateway_subscription" } do |f|
+    .form-group
+      = f.label :email
+      = f.text_field :email, class: "form-control"
+    .form-group
+      = f.label :product_handle
+      = f.select :product_handle, ["free", "subout-basic-service", "subout-pro-service"], {}, class: 'form-control', include_blank: false
+    .form-group
+      = f.button :submit, class: "btn btn-danger"
+      = link_to "Cancel", admin_gateway_subscriptions_path, class: "btn btn-default"
+
+    %p.help-block
+      Edit on chargify:
+      = link_to @subscription.subscription_url, @subscription.subscription_url
+
+    - unless @subscription.created_company.present?
+      %p.alert.alert-danger
+        This subscription is not connected to any company.
+        %br
+        Signup Link:
+        = link_to "https://#{DEFAULT_HOST_WITH_PORT}/#/sign_up?subscription_id=#{@subscription.id}", "http://#{DEFAULT_HOST_WITH_PORT}/#/sign_up?subscription_id=#{@subscription.id}", target: '_blank'
+- else
+  %p.alert.alert-error
+    Subscription not found on Chargify

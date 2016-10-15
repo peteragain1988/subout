@@ -1,0 +1,260 @@
+<div id="dashboard">
+  <div class="row">
+    <div id="sidebar" class="col-md-3 col-sm-3 filters">
+      <div class="welcome display-message">
+        <span class="display-message-extra">Welcome</span>
+        <span class="company display-message-subject">{{company.name}}!</span>
+      </div>
+      <div class="info-label-heading">Filter My View By:</div>
+      <section id="filters">
+        <section class="title"><h5>Opportunity Type</h5></section>
+        <section class="content">
+          <ul>
+            <li ng-repeat="filter in filters" class="filter" ng-class="{active: $location.search().opportunity_type == filter.name}"
+            title="{{filter.name}}">
+            <i class="glyphicon {{filter.icon}}"></i> <a ng-click="setOpportunityTypeFilter(filter.name)">{{filter.name}}</a>
+            </li>
+            <li class="filter" ng-class="{active: $location.search().opportunity_type == 'Quote Request', red: false}"
+            title="Quote Request">
+              <i class="glyphicon glyphicon-user"></i> <a ng-click="setOpportunityTypeFilter('Quote Request')">Consumer Quote Request</a>
+              <i class="label label-danger">{{available_quote_request_count}}</i>
+            </li>
+          </ul>
+        </section>
+      </section>
+      <section id="event_types" class="filters">
+        <section class="title"><h5>Event Type</h5></section>
+        <section class="content">
+          <ul>
+            <li class="filter" ng-class="{active: $location.search().event_type == 'opportunity_created'}"><a ng-click="setEventType('opportunity_created')">New Opportunities</a></li>
+            <li class="filter" ng-class="{active: $location.search().event_type =='bid_created'}"><a ng-click="setEventType('bid_created')">Recent Bids</a></li>
+            <li class="filter" ng-class="{active: $location.search().event_type =='opportunity_canceled'}"><a ng-click="setEventType('opportunity_canceled')">Cancellations</a></li>
+          </ul>
+        </section>
+      </section>
+      <section id="regions">
+        <section class="title"><h5>Region</h5></section>
+        <section  class="hidden-xs hidden-sm content">
+          <select data-placeholder="-- Select Region --" ng-model="regionFilter" ui-select2>
+            <option value=""></option>
+            <option ng-repeat="r in regionFilterOptions" value={{r}} data-abbreviated_name="{{r}}">{{r}}</option>
+          </select>
+          <div class="clearfix"></div>
+        </section>
+        <section  class="visible-xs visible-sm content">
+          <select class="form-control"  ng-model="regionFilter">
+            <option value="" selected="selected">-- Select Region --</option>
+            <option ng-repeat="r in regionFilterOptions" value={{r}} data-abbreviated_name="{{r}}">{{r}}</option>
+          </select>
+          <div class="clearfix"></div>
+        </section>
+      </section>
+
+    </div>
+    <div class="col-md-9 col-sm-9">
+
+      <div class="alert alert-info" ng-show="company.canAddFreeBuses()">
+          Your subscription includes Roadside Assistance for 2 of your vehicles. 
+          <a href="#modal" data-toggle="modal" ng-click="displaySettings('vehicles')" style="text-decoration:underline;">Click here to register your vehicles</a>
+      </div>
+      <section id="activities" when-scrolled="loadMoreEvents()">
+        <div id="toolbar">
+          <div class="row">
+            <div class="col-md-4 col-sm-4">
+              <div class="display-message sales-info" sales-info-messages="salesInfoMessages"></div>
+              <div class="info-label-heading">
+                <span ng-show="hasAnyFilter()">Events View Filtered By:</span>
+                <span ng-hide="hasAnyFilter()">All Events:</span>
+              </div>
+            </div>
+            <div class='col-md-8 col-sm-8'>
+              <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div class="form-group clearfix">
+                    <a href="#modal" class="btn btn-primary pull-right" data-toggle="modal" ng-click="setOpportunity({}); displayNewOpportunityForm()">Post new opportunity</a>
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                  <div id="search" class="form-group">
+                    <input id="search-listing" class="col-md-11 col-sm-10 col-xs-9" ui-keypress="{13:'fullTextSearch($event)'}" ng-model="query" placeholder="Search listings for..."/>
+                    <div class="glyphicon glyphicon-search"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="pills" class="form-group clearfix" ng-show="hasAnyFilter()">
+            <div class="pill" ng-show="$location.search().opportunity_type">
+              {{$location.search().opportunity_type}}<button type="button" ng-click="setOpportunityTypeFilter($location.search().opportunity_type)" class="close">×</button>
+            </div>
+            <div class="pill" ng-show="$location.search().event_type">
+              {{eventTypeLabel($location.search().event_type)}}<button type="button" ng-click="setEventType($location.search().event_type)" class="close">×</button>
+            </div>
+            <div class="pill region" ng-repeat="region in filterRegions">
+              {{region}}<button type="button" ng-click="removeRegionFilter(region)" class="close">×</button>
+            </div>
+            <div class="pill" ng-show="$location.search().q">
+              {{$location.search().q}}<button type="button" ng-click="query=null;fullTextSearch()" class="close">×</button>
+            </div>
+            <a class="clear-filters" ng-click="clearFilters()">
+              Clear All
+            </a>
+          </div>
+        </div>
+        <section id="activity-stream">
+          <div class="event clearfix"
+            ng-class="{expanded: event.selected, owner: event.actor._id == company._id, 'quote-request': event.eventable.for_quote_only==true}"
+            ng-repeat="event in events">
+
+            <div ng-if="isPublicEvent(event)">
+              <div ng-if="event.eventable.for_quote_only==false" ng-init="opportunity=event.eventable; actor=event.actor; action=event.action">
+                <div class="event-summary">
+                  <div class="row">
+                    <span class="col-md-3">
+                      <i class="glyphicon {{opportunity.icon}}" title="{{opportunity.type}}"></i>
+                      <i ng-show="opportunity.ada_required" class="ada-required" title="ADA vehicle"></i>
+                      <span class='created-at timeago' ng-cloak relative-time title="{{event.created_at}}">{{event.created_at|date}}</span>
+                    </span>
+                    <span class="col-md-9 col-sm-9">
+                      <span class="opportunity-name">
+                        <a ng-click="toggleEvent(event)" title="{{opportunity.name}}" ng-cloak>{{opportunity.name}}</a>
+                      </span>
+                      <span class="event-region" ng-cloak ng-show="!opportunity.is_for_special_region">{{ALL_REGIONS[opportunity.start_region]}}-&gt;{{ALL_REGIONS[opportunity.end_region]}}</span>
+                      <span class="event-region" ng-cloak ng-show="opportunity.is_for_special_region">{{opportunity.special_region}}</span>
+                      <span class="event-action" ng-cloak>
+                        {{actionDescription(action)}}
+                      </span>
+                      <a href="#modal" data-toggle="modal" ng-click="displayCompanyProfile(actor._id)"></a>
+
+                      <div class="pull-right expand-collapse">
+                        <a class="reference-number" ng-click="refNumSearch(event.eventable.reference_number)">#{{event.eventable.reference_number}}</a>
+                        <i ng-click="toggleEvent(event)" title="{{{true: 'Collapse'}[event.selected] || 'Expand'}}" class="glyphicon" ng-class="{true: 'glyphicon-chevron-down'}[event.selected] || 'glyphicon-chevron-right'"></i>
+                      </div>
+                    </span>
+                  </div>
+                </div>
+                <div class="eventable-details clearfix" ng-show="event.selected" class="action-buttons">
+                    <div class="col-md-offset-3 col-md-6">
+                      <div class="description">
+                        <div><strong>Description</strong></div>
+                        <div class="content">{{event.eventable.description}}</div>
+                        <div class="help-block"><div class="text-danger" ng-bind-html-unsafe="event.eventable.buyer_message"></div></div>
+                      </div>
+                      <div class="winner" ng-show="event.eventable.winning_bid_id">
+                        <span class="label-field">Winning Amount: </span> 
+                        <span>{{ event.eventable.winner.amount | soCurrency }}</span>
+                        <span ng-if="event.eventable.winner.vehicle_count > 1">({{ event.eventable.winner.vehicle_count }} vehicles)</span>
+                      </div>
+                      <div ng-show="event.eventable.vehicle_count > 1">
+                        <span>Vehicles needed:</span> {{event.eventable.vehicle_count}}<br />
+                      </div>
+                      <div ng-show="!event.eventable.is_for_special_region">
+                        <span>Pick up:</span> {{event.eventable.start_date | soShortDate}} {{event.eventable.start_time}}<br />
+                        <span>Drop off:</span> {{event.eventable.end_date | soShortDate}} {{event.eventable.end_time}}
+                      </div>
+                      <div ng-show="event.eventable.is_for_special_region">
+                        <span>Location:</span> {{event.eventable.special_region}}<br />
+                      </div>
+                      <div>
+                        <span>Created on:</span> {{event.eventable.created_at|date}}
+                      </div>
+
+                      <div ng-hide="event.eventable.winning_bid_id">
+                        <div ng-show="event.eventable.status == 'In progress' || event.eventable.status == 'In negotiation'">
+                          <span>Bidding ends:</span>
+                          <span ng-class='{relative_time:event.eventable.bidding_ends_at}' title="{{event.eventable.bidding_ends_at}}">{{event.eventable.bidding_ends_at|date}}</span>
+                        </div>
+                        <div ng-show="event.eventable.status && event.eventable.status != 'In progress' && event.eventable.status != 'In negotiation'" class="warning">
+                          <span>Bidding ended</span>
+                        </div>
+                        <div ng-show="event.eventable.reserve_amount">
+                          <span>Starting price: </span>{{event.eventable.reserve_amount | soCurrency}}
+                        </div>
+                        <div ng-show="event.eventable.quick_winnable">
+                          <span>Buy now:</span> {{event.eventable.win_it_now_price | soCurrency}}
+                        </div>
+                      </div>
+
+                      <div ng-show="event.eventable._id">
+                        <span ng-show="company.canBid(event.eventable)">  
+                          <a href="#modal" class="btn btn-success btn-small" data-toggle="modal" ng-click="displayNewBidForm(event.eventable)">Bid</a><br/>
+                          <span ng-show="opportunity.quick_winnable" class="win-it-now-button-wrapper">
+                            <a class="btn btn-success btn-small win-it-now" ng-click="winOpportunityNow(opportunity)">Win Now ({{opportunity.win_it_now_price | soCurrency}})</a>
+                          </span>
+                        </span>
+                        <br/>
+                        <a href="#/opportunities/{{event.eventable.reference_number}}">See more...</a>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <a ng-show="event.eventable.image_url && !isOldBrowser" rel="lightbox" href="{{event.eventable.large_image_url}}" title="{{event.eventable.name}}">
+                        <img class="img-responsive" ng-src="{{event.eventable.image_url}}" />
+                      </a>
+                      <a ng-show="event.eventable.image_url && isOldBrowser"  href="{{event.eventable.large_image_url}}" title="{{event.eventable.name}}" target="_blank">
+                        <img class="img-responsive" ng-src="{{event.eventable.image_url}}" />
+                      </a>
+                    </div>
+                </div>
+              </div>
+
+              <div ng-if="event.eventable.for_quote_only==true" ng-init="quote_request=event.eventable; actor=event.actor; action=event.action">
+                <div class="event-summary">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <i class="glyphicon glyphicon-user icon-quote-request" title="{{quote_request.trip_type}}"></i>
+                      <span class='created-at timeago' ng-cloak relative-time title="{{event.created_at}}">{{event.created_at|date}}</span>
+                    </div>
+                    <div class="col-md-9 col-sm-9">
+                      <span class="opportunity-name">
+                        <a ng-click="toggleEvent(event)" title="{{quote_request.name}}" ng-cloak>{{quote_request.name}}</a>
+                      </span>
+                      <span class="event-region" ng-cloak>{{ALL_REGIONS[quote_request.start_region]}}-&gt;{{ALL_REGIONS[quote_request.end_region]}}</span>
+                      <span class="event-action" ng-cloak>{{actionDescription(action)}}</span>
+
+                      <div class="pull-right expand-collapse">
+                        <a class="reference-number" ng-click="refNumSearch(event.eventable.reference_number)">#{{event.eventable.reference_number}}</a>
+                        <i ng-click="toggleEvent(event)" title="{{{true: 'Collapse'}[event.selected] || 'Expand'}}" class="glyphicon" ng-class="{true: 'glyphicon-chevron-down'}[event.selected] || 'glyphicon-chevron-right'"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="eventable-details clearfix" ng-show="event.selected" class="action-buttons">
+                    <div class="col-md-offset-3 col-md-6">
+                      <div class="description">
+                        <div><strong>Description</strong></div>
+                        <div class="content">{{quote_request.description}}</div>
+                      </div>
+                      <div ng-show="quote_request.vehicle_count > 1">
+                        <span>Vehicles needed:</span> {{quote_request.vehicle_count}}<br />
+                      </div>
+                      <div>
+                        <span>Pick up:</span> {{quote_request.start_location}}, {{quote_request.start_date | soShortDate}} {{quote_request.start_time}}<br />
+                        <span>Drop off:</span> {{quote_request.end_location}}
+                      </div>
+                      <div>
+                        <span>Created on:</span> {{quote_request.created_at|date}}
+                      </div>
+
+                      <div>
+                        <span>Bidding ends:</span>
+                          <span ng-class='{relative_time:quote_request.bidding_ends_at}' title="{{quote_request.bidding_ends_at}}">
+                            {{quote_request.bidding_ends_at|date}}
+                          </span>
+                      </div>
+
+                      <div ng-show="event.eventable._id">
+                        <a href="#/quote_requests/{{quote_request.reference_number}}">See more...</a>
+                      </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div class="load-more" ng-hide="noMoreEvents">
+          <span ng-show="loading" class="content-loading-animation"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+<div id="opportunities">
+  <div class="row">
+    <div class="welcome display-message top-banner col-md-6 col-sm-6 col-xs-12">
+      <span class="display-message-extra">Welcome</span>
+      <span class="company display-message-subject">{{company.name}}!</span>
+      <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="form-group clearfix">
+          <a href="#modal" class="btn btn-primary pull-right" data-toggle="modal" ng-click="setOpportunity({}); displayNewOpportunityForm()">Post new opportunity</a>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="search">
+          <input ng-model="query" ui-keypress="{13:'fullTextSearch()'}" placeholder="Search opportunities for..."/>
+          <div class="glyphicon glyphicon-search"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div>
+  </div>
+  
+  <div>
+    <table class="table">
+      <tr>
+        <th>Reference #</th>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>
+          <a ng-click="sortOpportunities('created_at')">Created</a>
+          <i ng-show="sortBy == 'created_at' && sortDirection == 'desc'"  class="glyphicon glyphicon-chevron-down"></i>
+          <i ng-show="sortBy == 'created_at' && sortDirection == 'asc'"  class="glyphicon glyphicon-chevron-up"></i>
+        </th>
+        <th>
+          <a ng-click="sortOpportunities('bidding_ends_at')">Bidding Ends</a>
+          <i ng-show="sortBy == 'bidding_ends_at' && sortDirection == 'desc'"  class="glyphicon glyphicon-chevron-up"></i>
+          <i ng-show="sortBy == 'bidding_ends_at' && sortDirection == 'asc'"  class="glyphicon glyphicon-chevron-up"></i>
+        </th>
+        <th>
+          <a ng-click="sortOpportunities('start_date')">Pick up</a>
+          <i ng-show="sortBy == 'start_date' && sortDirection == 'desc'"  class="glyphicon glyphicon-chevron-up"></i>
+          <i ng-show="sortBy == 'start_date' && sortDirection == 'asc'"  class="glyphicon glyphicon-chevron-up"></i>
+        </th>
+        <th class="current-bid-amount">Bid Range</th>
+        <th>Winning Bidder (Amount)</th>
+      </tr>
+      <tr ng-repeat="opportunity in paginated_results" >
+        <td>{{opportunity.reference_number}}</td>
+        <td>
+          <i class="glyphicon {{opportunity.icon}}" title="{{opportunity.type}}"></i>
+          <i ng-show="opportunity.ada_required" class="ada-required" title="ADA vehicle"></i>
+        </td>
+        <td><a href="#/opportunities/{{opportunity.reference_number}}">{{opportunity.name}}</a></td>
+        <td>{{opportunity.description}}</td>
+        <td>
+          <span class='created-at timeago' relative-time title="{{opportunity.created_at}}">{{opportunity.created_at|date}}</span>
+        </td>
+        <td>
+          <span class='created-at timeago' relative-time title="{{opportunity.bidding_ends_at}}">{{opportunity.bidding_ends_at|date}}</span>
+        </td>
+        <td>
+          <span class='created-at'>{{opportunity.start_date | stringToDate | date:'MMM dd'}}</span>
+        </td>
+        <td class="current-bid-amount">
+          <span ng-show="opportunity.reserve_amount" class="alert-danger">{{ opportunity.reserve_amount | soCurrency }}</span>
+          <span ng-show="opportunity.reserve_amount && opportunity.lowest_bid_amount"> / </span>
+          <span ng-show="opportunity.lowest_bid_amount"><span class="alert-info">{{ opportunity.lowest_bid_amount | soCurrency }} ~ {{ opportunity.highest_bid_amount | soCurrency }}</span></span>
+        </td>
+        <td><span ng-show="opportunity.winner">{{opportunity.winner.name}} ({{ opportunity.winner.amount | soCurrency }})</span></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="clearfix"><div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div></div>
+</div>

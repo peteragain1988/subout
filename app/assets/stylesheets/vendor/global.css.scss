@@ -1,0 +1,21 @@
+@import 'bootstrap-sprockets';
+@import "bootstrap-custom";
+
+html{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+}
+
+header{
+  border-bottom: 0.8rem solid #c7c6b3;
+  margin-bottom: 3rem;
+
+  .logo{
+    margin-bottom: 1rem;
+  }
+}

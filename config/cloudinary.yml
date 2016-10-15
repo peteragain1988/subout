@@ -1,0 +1,37 @@
+---
+development:
+  cloud_name: subout
+  api_key: '874422597178734'
+  api_secret: 5csu53XTsHUJK8TtRET2jQpN-QA
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: subout
+  api_key: '874422597178734'
+  api_secret: 5csu53XTsHUJK8TtRET2jQpN-QA
+  enhance_image_tag: true
+  static_image_support: true
+suboutdemo:
+  cloud_name: subout
+  api_key: '874422597178734'
+  api_secret: 5csu53XTsHUJK8TtRET2jQpN-QA
+  enhance_image_tag: true
+  static_image_support: true
+suboutdev:
+  cloud_name: subout
+  api_key: '874422597178734'
+  api_secret: 5csu53XTsHUJK8TtRET2jQpN-QA
+  enhance_image_tag: true
+  static_image_support: true
+subouttest:
+  cloud_name: subout
+  api_key: '874422597178734'
+  api_secret: 5csu53XTsHUJK8TtRET2jQpN-QA
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: subout
+  api_key: '874422597178734'
+  api_secret: 5csu53XTsHUJK8TtRET2jQpN-QA
+  enhance_image_tag: true
+  static_image_support: false

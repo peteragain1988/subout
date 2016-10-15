@@ -1,0 +1,37 @@
+@import 'bootstrap-sprockets';
+@import "bootstrap-custom";
+
+html{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+}
+
+header{
+  border-bottom: 0.8rem solid #c7c6b3;
+  margin-bottom: 3rem;
+
+  .logo{
+    margin-bottom: 1rem;
+  }
+}
+
+.alert-notice{
+  @extend .alert-info;
+}
+
+.alert-error{
+  @extend .alert-danger;
+}
+
+.alert-alert{
+  @extend .alert-danger;
+}
+
+.alert-recaptcha_error{
+  @extend .alert-danger;
+}

@@ -1,0 +1,5 @@
+%p Dear #{@supplier.name},
+%p #{@buyer.name} has added your company (#{@supplier.name}) as a favorite on SubOut.
+%p You will now be able to bid on special jobs that #{@buyer.name} has made available only for his favorite companies.
+%p If you are not a paid subscriber to SubOut, you will be restricted to bidding on opportunitites posted by companies that have favorited you, like #{@buyer.name}.
+= render 'email_sig'

@@ -1,0 +1,49 @@
+<div id="add-new-favorite" ng-controller="NewFavoriteCtrl">
+  <div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">
+      x
+    </button>
+    <h3>ADD NEW FAVORITE</h3>
+  </div>
+  <div class="modal-body">
+    <section class="section-content">
+      <form name="newFavorite" class="form-inline" novalidate>
+        <div class="form-group">
+          <input id="supplier_query" class="form-control" required type="text" placeholder="Supplier name or email" ng-model="supplierQuery" />
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary form-control" ng-disabled="newFavorite.$invalid" ng-click="findSupplier()">Find Supplier</button>
+        </div>
+      </form>
+      <ul>
+        <li ng-repeat="foundCompany in foundCompanies">
+          <span ng-if="foundCompany._id != company._id">
+            {{foundCompany.name}}
+            <a ng-click="addToFavorites(foundCompany)">Add to Favorites</a>
+          </span>
+        </li>
+      </ul>
+      <div ng-show="companyNotFound">
+        The supplier was not found
+      </div>
+      <div ng-show="showInvitation">
+        <span>Invite him to join as a guest supplier</span>
+        <form class="form-horizontal invitation-form col-sm-12 col-md-12">
+          <div class="form-group">
+            <input id="supplier_email" class="form-control" required disabled type="email" placeholder="Email" ng-model="invitation.supplier_email" />
+          </div>
+          <div class="form-group">
+            <input id="supplier_name" class="form-control" type="text" placeholder="Company Name" ng-model="invitation.supplier_name" />
+          </div>
+          <div class="form-group">
+            <textarea id="message" class="form-control" rows="4" required ng-model="invitation.message"></textarea>
+          </div>
+          <div class="form-group last">
+            <button class="btn btn-primary" ng-click="sendInvitation()">Send Invitation</button>
+            <button data-dismiss="modal" class="btn btn-danger" type="button">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+@import 'bootstrap-sprockets';
+@import "bootstrap-custom";
+
+#subscriptions {
+  td {
+    max-width: 300px;
+  }
+}
+#admin-companies {
+  td {
+    max-width: 300px;
+    min-width: 45px;
+  }
+}
+.subscription-regions {
+  .control-group {
+    margin-left: 180px;
+  }
+  .check-all {
+    margin-bottom: 10px;
+    label, input {
+      display: inline-block;
+      margin: 0;
+    }
+  }
+  .controls {
+    margin-left: 0;
+    margin-bottom: 5px;
+    float: left;
+    width: 200px;
+    label, input {
+      display: inline-block;
+      margin: 0;
+    }
+  }
+}
+
+.alert-notice{
+  @extend .alert-info;
+}
+
+.alert-error{
+  @extend .alert-danger;
+}
+
+.alert-alert{
+  @extend .alert-danger;
+}

@@ -1,0 +1,26 @@
+<% if !params[:redirect].blank? %>
+  <form method="post" action="<%=params[:redirect]%>" target="_parent" id="thankyou">
+    <input type="hidden" name="status" value="success" />
+  </form>
+  <script>
+    $('#thankyou').submit();
+  </script>
+<% else %>
+  <div id="thankyou">
+    <p class="text-center alert alert-info">
+      Thank you for submitting a request for quote.
+      <br/>
+      Over the next 48 hours You will be contacted by email and phone regarding your charter. 
+      <br/>
+      Please make sure that you check your Junk files!
+    </p>
+  </div>
+  <script>
+  $(function(){
+    if (parent.window.postMessage) {
+      parent.window.postMessage({event: 'success'}, "<%= URI.join(request.referer, '/').to_s[0...-1] %>");
+      parent.window.postMessage({event: 'resize', height: $('#thankyou').height() }, "<%= URI.join(request.referer, '/').to_s[0...-1] %>");
+    }
+  });
+  </script>
+<% end %>

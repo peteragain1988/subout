@@ -1,0 +1,124 @@
+<div id="offer-new" ng-controller="OfferFormCtrl">
+  <div class="modal-header">
+    <button data-dismiss="modal" class="close" type="button">
+      x
+    </button>
+    <h3>Choose a vendor</h3>
+  </div>
+  <div class="modal-body">
+    <form name="newOffer" class="form-horizontal">
+
+      <div class="alert alert-danger" ng-show="errors">
+        <a class="close" ng-click="hideAlert()">&times;</a>
+        <ul ng-repeat="error in errors">
+          <li ng-bind-html-unsafe="error"></li>
+        </ul>
+      </div>
+
+      <div class="form-group oportunity_name">
+        <label class="col-md-4 control-label">Opportunity</label>
+        <div class="col-md-8 opportunity-name">
+          <h4>{{opportunity.name}}</h4>
+        </div>
+      </div>
+
+      <legend>Vendor</legend>
+      <div class="form-group vendor_email" ng-class="{'has-error':newOffer.vendor_email.$invalid}">
+        <label for="vendor_name" class="col-md-4 control-label">Email *</label>
+        <div class="col-md-8">
+          <input type="text"
+                 id="vendor_email"
+                 name="vendor_email"
+                 required
+                 ng-model="vendor.email"
+                 size="10"
+                 maxlength="50"
+                 class="form-control">
+
+          <div>
+            <br>
+            <button ng-click="get_vendor()" class="btn btn-info" ng-disabled="newOffer.vendor_email.$invalid">
+              Find
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group vendor_name" ng-class="{'has-error':newOffer.vendor_name.$invalid}">
+        <label for="vendor_name" class="col-md-4 control-label">Name *</label>
+        <div class="col-md-8">
+          <input type="text"
+                 id="vendor_name"
+                 name="vendor_name"
+                 required
+                 ng-model="vendor.name"
+                 size="10"
+                 maxlength="10"
+                 class="form-control">
+        </div>
+      </div>
+      <div class="form-group vendor_city">
+        <label for="vendor_city" class="col-md-4 control-label">City *</label>
+        <div class="col-md-8">
+          <input type="text"
+                 id="vendor_city"
+                 name="vendor_city"
+                 required
+                 ng-model="vendor.city"
+                 size="10"
+                 maxlength="10"
+                 class="form-control">
+        </div>
+      </div>
+      <div class="form-group vendor_state">
+        <label for="vendor_state" class="col-md-4 control-label">State *</label>
+        <div class="col-md-8">
+          <input type="text"
+                 id="vendor_state"
+                 name="vendor_state"
+                 required
+                 ng-model="vendor.state"
+                 size="10"
+                 maxlength="10"
+                 class="form-control">
+        </div>
+      </div>
+
+      <legend>Offer</legend>
+      <div class="form-group">
+        <label for="offer_vehicle_type" class="col-md-4 control-label">Vehicle Type</label>
+        <div class="col-md-8">
+          <select id="offer_vehicle_type" class="form-control" name="offer_vehicle_type" ng-model="offer.vehicle_type" ng-options="t for t in VEHICLE_TYPES">
+            <option value=""></option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group offer_amount" ng-class="{'has-error':newOffer.offer_amount.$invalid}">
+        <label for="offer_amount" class="col-md-4 control-label">Amount ($) *</label>
+        <div class="col-md-8">
+          <input type="text"
+                 id="offer_amount"
+                 name="offer_amount"
+                 required
+                 ng-model="offer.amount"
+                 ui-validate="{ only_numbers: 'validateNumber($value)' }"
+                 size="10"
+                 maxlength="10"
+                 class="form-control">
+
+          <p ng-show="newOffer.offer_amount.$error.only_numbers" class="help-block">Enter only numeric characters.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-md-offset-4 col-md-8">
+          <div>
+            <button ng-click="save()" class="btn btn-success" ng-disabled="newOffer.$invalid">
+              Select Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

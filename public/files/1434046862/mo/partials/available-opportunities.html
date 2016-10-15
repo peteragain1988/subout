@@ -1,0 +1,117 @@
+<div ui-content-for="sidebar-right">
+  <div class="clearfix">
+    <div class="col-sm-12">
+      <form class="form-vertical" role="form">
+        <div class="form-group">
+          <label>Pick up Date:</label> 
+          <input type="text" class="form-control" ng-model="filterDepatureDate" ui-date="dateOptions">      
+        </div>
+        <div class="form-group">
+          <label>Vehicle Type: </label>
+          <select ng-model="filterVehicleTypes" data-placeholder="All Vehicle Types" class="form-control" ng-options="t for t in VEHICLE_TYPES">
+            <option value=""></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Trip Type: </label>
+          <select ng-model="filterTripType" data-placeholder="All" class="form-control"  ng-options="t for t in TRIP_TYPES">
+              <option value=""></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Region: </label>
+          <div ng-dropdown-multiselect="" options="ALL_REGIONS" selected-model="filterRegions" checkboxes="true"></div>
+        </div>
+        <div class="form-group">
+          <label>Sort by: </label>
+          <select ng-model="sortOption" ng-change="sortMobileOpportunity()" class="form-control">
+            <option ng-repeat="item in sortItems" value="{{item.value}}">{{item.label}}</option>
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div ui-content-for="modals">
+
+</div>
+
+<div ui-content-for="footer">
+  <div class="btn-group justified">
+    <a href="" ui-turn-on="modal1" class="btn btn-navbar" ng-click="setOpportunity({}); displayNewOpportunityForm()"><i class="glyphicon glyphicon-plus"></i> Post new opportunity</a>
+    <a href="" ui-toggle="uiSidebarRight" class="btn btn-navbar"><i class="glyphicon glyphicon-search"></i> Filter</a>
+  </div>
+</div>
+
+<div class="scrollable">
+  <div class="scrollable-content">
+    <div id="available_opportunities" class="col-sm-12">
+      <div class="clearfix"><div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div></div>
+      <br/>
+      <p class="alert alert-info">
+        <span class="display-message-extra">Welcome</span>
+        <span class="company display-message-subject">{{company.name}}!</span>
+        <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+      </p>
+      <p class="alert alert-info" ng-show="company.regions.length == 0">
+          <a href="" ui-turn-on="modal1" ng-click="displaySettings('favorited-regions')" style="text-decoration:underline;">Click here to add your favorite regions</a>
+      </p>
+      <div>
+        <table ng-repeat="opportunity in paginated_results" class="table table-border">
+          <tr>
+            <td class="table-header">Reference #</td>
+            <td><a class="reference-number" href="#/dashboard?q=%23{{opportunity.reference_number}}">#{{opportunity.reference_number}}</a></td>
+          </tr>
+          <tr>
+            <td class="table-header">Type</td>
+            <td>{{opportunity.type}}</td>
+          </tr>
+          <tr>
+            <td class="table-header">Name</td>
+            <td>
+              <a ng-if="opportunity.for_quote_only==false" href="#/opportunities/{{opportunity.reference_number}}" title="{{opportunity.name}}">
+                {{opportunity.name}}
+              </a>
+              <a ng-if="opportunity.for_quote_only!=false" href="#/quote_requests/{{opportunity.reference_number}}" title="{{opportunity.name}}">
+                {{opportunity.name}}
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">Description</td>
+            <td>{{opportunity.description}}</td>
+          </tr>
+          <tr>
+            <td class="table-header">Created</td>
+            <td>
+              <span class='created-at timeago' relative-time title="{{opportunity.created_at}}">{{opportunity.created_at|date}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">Ends</td>
+            <td>
+              <span class='created-at timeago' relative-time title="{{opportunity.bidding_ends_at}}">{{opportunity.bidding_ends_at|date}}</span>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">Bid Range</td>
+            <td class="current-bid-amount">
+              <span ng-show="opportunity.reserve_amount" class="alert-danger">{{ opportunity.reserve_amount | soCurrency }}</span>
+              <span ng-show="opportunity.reserve_amount && opportunity.lowest_bid_amount"> / </span>
+              <span ng-show="opportunity.lowest_bid_amount"><span class="alert-info">{{ opportunity.lowest_bid_amount | soCurrency }} ~ {{ opportunity.highest_bid_amount | soCurrency }}</span></span>
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">Actions</td>
+            <td>
+              <a class="btn btn-success btn-small" href="" ui-turn-on="modal1" ng-click="displayNewBidForm(opportunity)">Bid</a><br />
+              <a class="btn btn-success btn-small win-it-now" ng-show="opportunity.quick_winnable" ng-click="winOpportunityNow(opportunity)">Win Now ({{opportunity.win_it_now_price | soCurrency}})</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="clearfix"> <div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div> </div>
+    </div>
+  </div>
+</div>

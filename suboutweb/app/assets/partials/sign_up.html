@@ -1,0 +1,157 @@
+<header id="header">
+  <div class="row">
+    <div class="col-md-6">
+      <div id="logo"><img class="img-responsive" src="/img/logo.png"></div>
+    </div>
+  </div>
+</header>
+<div >
+<form id="sign-up-form" ng:submit="signUp()" name="signUpForm" class="form-horizontal well" novalidate>
+  <fieldset>
+    <div class="form-group">
+      <div class="col-md-offset-3 col-md-9">
+        <h3>Thanks for signing up!</h3>
+      </div>
+    </div>
+    <div class="alert alert-danger" ng-show="errors">
+      <a class="close" ng-click="hideAlert()">&times;</a>
+      <ul ng-repeat="error in errors">
+        <li>{{error}}</li>
+      </ul>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.email.$invalid}">
+      <label for="email" class="col-md-3 control-label">Login Email *</label>
+      <div class="col-md-9">
+        <input id="email" type="text" name="email" class="form-control" ng:model="user.email" required autofocus />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.password.$invalid}">
+      <label for="password" class="col-md-3 control-label">Password *</label>
+      <div class="col-md-9">
+        <input id="password" type="password" name="password" class="form-control" ng:model="user.password" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.password_confirmation.$invalid}">
+      <label for="password_confirmation" class="col-md-3 control-label">Password<br>Confirmation *</label>
+      <div class="col-md-9">
+        <input id="password_confirmation" type="password" name="password_confirmation" class="form-control" ng:model="user.password_confirmation" required />
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="form-group" ng-class="{error:signUpForm.name.$invalid}">
+      <label for="name" class="col-md-3 control-label">Company Name *</label>
+      <div class="col-md-9">
+        <input id="name" type="text" name="name" class="form-control" ng:model="company.name" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.abbreviated_name.$invalid}">
+      <label for="abbreviated_name" class="col-md-3 control-label">Company Abbreviated Name *</label>
+      <div class="col-md-9">
+        <input id="abbreviated_name" type="text" name="abbreviated_name" class="form-control" ng:model="company.abbreviated_name" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="logo_id" class="col-md-3 control-label">Company Logo</label>
+      <div class="col-md-9">
+        <input ng-init="setupFileUploader()" class="cloudinary-fileupload" data-url="https://api.cloudinary.com/v1_1/subout/auto/upload" name="file" type="file"></input>
+        <input type="hidden" id="company_logo_id" class="file-upload-public-id" ng-model="company.logo_id">
+        <div id="progress">
+          <div class="bar" style="width: 0%;"></div>
+        </div>
+        <img class="image-preview" ng-src="{{company.logo_url}}"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="dot_number" class="col-md-3 control-label">DOT Number</label>
+      <div class="col-md-9">
+        <input id="dot_number" type="text" name="dot_number" class="form-control" ng:model="company.dot_number" />
+        <p class="help-block warning">Required for bidding.</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="has_ada_vehicles" class="col-md-3 control-label">Fleet includes ADA vehicles?</label>
+      <div class="col-md-9">
+        <input id="has_ada_vehicles" type="checkbox" ng-model="company.has_ada_vehicles" value="1">
+        <p class="help-block warning">Required for bidding on ADA opportunities.</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="insurance" class="col-md-3 control-label">Insurance</label>
+      <div class="col-md-9">
+        <select class="form-control" ng-model="company.insurance">
+          <option value=""></option>
+          <option value="lt_1M">&lt; 1M</option>
+          <option value="1M">1M</option>
+          <option value="5M">5M</option>
+          <option value="10M">10M</option>
+          <option value="gt_10M">&gt; 10M</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.fleet_size.$invalid}">
+      <label for="fleet_size" class="col-md-3 control-label">Fleet Size *</label>
+      <div class="col-md-9">
+        <input id="fleet_size" type="text" name="fleet_size" class="form-control" ng:model="company.fleet_size" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.since.$invalid}">
+      <label for="since" class="col-md-3 control-label">Since *</label>
+      <div class="col-md-9">
+        <input id="since" type="text" name="since" class="form-control" ng:model="company.since" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.owner.$invalid}">
+      <label for="owner" class="col-md-3 control-label">Owner *</label>
+      <div class="col-md-9">
+        <input id="owner" type="text" name="owner" class="form-control" ng:model="company.owner" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.contact_name.$invalid}">
+      <label for="contact_name" class="col-md-3 control-label">Contact Name *</label>
+      <div class="col-md-9">
+        <input id="contact_name" type="text" name="contact_name" class="form-control" ng:model="company.contact_name" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.contact_phone.$invalid}">
+      <label for="contact_phone" class="col-md-3 control-label">Contact Phone *</label>
+      <div class="col-md-9">
+        <input id="contact_phone" type="text" name="contact_phone" class="form-control" ng:model="company.contact_phone" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.company_email.$invalid}">
+      <label for="company_email" class="col-md-3 control-label">Contact Email *</label>
+      <div class="col-md-9">
+        <input id="conpany_email" type="text" name="company_email" class="form-control" ng:model="company.email" required />
+      </div>
+    </div>
+
+    <div class="form-group" ng-class="{error:signUpForm.website.$invalid}">
+      <label for="website" class="col-md-3 control-label">Website *</label>
+      <div class="col-md-9">
+        <input id="website" type="text" name="website" class="form-control" ng:model="company.website" required />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-md-offset-3 col-md-9">
+        <button class="btn btn-primary" type="submit" ng:disabled="signUpForm.$invalid && !agreement">Sign Up</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

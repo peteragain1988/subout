@@ -1,0 +1,16 @@
+%h3 Summary
+.row-fluid
+  .span3
+    %table.table.table-striped.table-bordered
+      %tr
+        %th Total Opportunities Posted #
+        %td= number_with_delimiter(Opportunity.count)
+      %tr
+        %th Total Bid Count #
+        %td= number_with_delimiter(Bid.count)
+      %tr
+        %th Total Awarded #
+        %td= number_with_delimiter(Opportunity.won.count)
+      %tr
+        %th Total Awarded $
+        %td= number_to_currency(Opportunity.won.sum(&:value))

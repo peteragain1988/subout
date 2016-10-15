@@ -1,0 +1,13 @@
+%h2 Terms and conditions
+%p.text-right
+  = link_to "New Terms PDF", new_admin_term_path, class: 'btn btn-primary'
+  
+%table.table.table-striped
+  - @terms.all.each do |term|
+    %tr
+      %td
+        = link_to term.file_name, admin_term_path(term), target: '_blank'
+      %td
+        = term.created_at
+      %td
+        = link_to "Publish", publish_admin_term_path(term), method: :post, class: 'btn btn-danger'

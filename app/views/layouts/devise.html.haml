@@ -1,0 +1,22 @@
+!!!
+%html
+  %head
+    %title Subout
+    = stylesheet_link_tag    "application", :media => "all"
+    = stylesheet_link_tag    "retailer", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    .container
+      .header
+        %br
+        = image_tag('logo.png')
+
+      = render 'shared/flashes'
+
+      = yield
+
+      #buy-sell-connect.row
+        .inner.col-md-12
+          %p Subout consumer form.
+          %p It's time to embed and request quote.

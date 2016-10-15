@@ -1,0 +1,93 @@
+%h1 Gateway Subscriptions
+
+.clearfix
+  %form.form-inline{url: admin_gateway_subscriptions_path, method: :get}
+    .form-group
+      %input.form-control{type: 'text', name: 'search', placeholder: 'Please type search keyword'}
+      %input{type: 'hidden', name: 'category', value: params[:category]}
+    .form-group
+      %input.btn.btn-primary{type: 'submit', value: 'Search'}
+%br
+
+%ul.nav.nav-pills
+  %li{class: ("active" if params[:category].blank?)}
+    = link_to "All", admin_gateway_subscriptions_path
+  %li{class: ("active" if params[:category] == "not_registered")}
+    = link_to "Not registered", admin_gateway_subscriptions_path(category: "not_registered")
+  %li{class: ("active" if params[:category] == "registered")}
+    = link_to "Registered", admin_gateway_subscriptions_path(category: "registered")
+  %li.pull-right
+    = link_to "Download CSV", admin_gateway_subscriptions_path(format: "csv", category: params[:category]), target: "_blank"
+
+.clearfix
+  .pull-right
+    = paginate @subscriptions
+    %br
+
+%table#subscriptions.table.table-striped
+  %thead
+    %tr
+      %th #
+      %th
+        Created Time<br>
+        Identifier
+      %th
+        Email<br>
+        Name<br>
+        Organization
+      %th
+        Chargify<br>
+        Subscription ID<br>
+        Customer ID
+      %th Subscription plan
+      %th Confirmed
+      %th Sign up company
+      %th State
+      %th Payment State
+      %th CC Expired? 
+      %th TAC
+      %th Actions
+  %tbody
+    - @subscriptions.each_with_index do |subscription, index|
+      %tr
+        %td= index + 1
+        %td
+          #{subscription.created_at}<br>
+          #{subscription.id}
+        %td
+          #{subscription.email}<br>
+          #{subscription.name}<br>
+          #{subscription.organization}
+        %td
+          - unless subscription.subscription_id.blank?
+            = link_to "Sub #{subscription.subscription_id}", subscription.subscription_url, target: "_blank"
+            %br
+            = link_to "Cus #{subscription.customer_id}", subscription.customer_url, target: "_blank"
+        %td= subscription.product_handle
+        %td= subscription.confirmed
+        %td
+          - if subscription.created_company
+            = link_to subscription.created_company_name, edit_admin_company_path(subscription.created_company.id)
+            %br
+            %label Created at:
+            = subscription.created_company.created_at
+        %td= subscription.state
+        %td= subscription.payment_state
+        %td= !!subscription.card_expired_date
+        %td
+          - if subscription.tac_agreement
+            %span.label.label-info Accepted
+            %br
+            - if subscription.tac_agreement_at
+              %label Accepted at:
+              = subscription.tac_agreement_at
+          - else
+            %span.label.label-warning Not Accepted
+            %br
+        %td
+          = link_to "Resend", resend_invitation_admin_gateway_subscription_path(subscription), method: "put", class: "btn btn-primary" unless subscription.created_company
+          = link_to "Edit", edit_admin_gateway_subscription_path(subscription), method: "get", class: "btn btn-info"
+.clearfix
+  .pull-right
+    = paginate @subscriptions
+    %br

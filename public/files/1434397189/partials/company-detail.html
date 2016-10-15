@@ -1,0 +1,209 @@
+<div id="company-detail-show">
+  <div class="welcome display-message top-banner">
+    <span class="display-message-extra">Welcome</span>
+    <span class="company display-message-subject">{{company.name}}!</span>
+    <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+  </div>
+
+  <div class="alert alert-info" ng-show="notice">
+    {{notice}}
+  </div>
+  <div class="alert alert-info" ng-show="rating.editable">
+    Please rate this company.
+  </div>
+
+  <section class="section-content">
+    <div class="row form-group">
+      <div class="col-sm-3">
+          <h4>{{detailed_company.name}}</h4>
+          <div ng-show="detailed_company.score">
+            <span ng-repeat="s in stars" ng-class="{ hide: s > detailed_company.score }"> 
+              <img src="/img/icon-star.png">
+              <img src="/img/icon-star-half.png" ng-if="detailed_company.score - s > 0 && detailed_company.score - s < 1">  
+            </span>
+              ( {{detailed_company.score}} )
+          </div>
+          <div><img ng-show="detailed_company.logo_url" class="logo" ng-src="{{detailed_company.logo_url}}" /></div>
+          <div class="add-to-favorites" ng-show="detailed_company.canBeAddedAsFavorite(company)">
+            <a ng-click="addToFavorites(detailed_company)">Add to Favorites</a>
+          </div>
+      </div>
+     
+      <div class="col-sm-9">
+        <div class="row">
+            <div class="col-sm-3">DOT Number:</div>
+            <div class="col-sm-9"><a target="_blank" href="http://www.safer.fmcsa.dot.gov/query.asp?searchtype=ANY&query_type=queryCarrierSnapshot&query_param=USDOT&original_query_param=NAME&query_string={{detailed_company.dot_number}}">{{detailed_company.dot_number}}</a></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">Insurance</div>
+            <div class="col-sm-9"><a target="_blank" href="http://li-public.fmcsa.dot.gov/LIVIEW/pkg_carrquery.prc_carrlist?n_dotno={{detailed_company.dot_number}}">{{detailed_company.insurance}}</a></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">Established Date:</div>
+            <div class="col-sm-9">{{detailed_company.since}}</div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">Fleet Size:</div>
+            <div class="col-sm-9">{{detailed_company.fleet_size}}</div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">Contact:</div>
+            <div class="col-sm-9">
+              <a href="mailto:{{detailed_company.email}}">{{detailed_company.contact_name}} ({{detailed_company.email}})</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">Contact Phone:</div>
+            <div class="col-sm-9">
+              {{detailed_company.contact_phone}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3">Website:</div>
+            <div class="col-sm-9">
+                <a href="{{detailed_company.website | websiteUrl}}" target="_blank">{{detailed_company.website}}</a>
+            </div>
+        </div>
+
+
+        <form name="newRating" id="ratingForm" class="form-horizontal"  ng-show="rating.editable">
+          <hr/>
+          <h5>Please rate this company</h5>
+          <div class="row question">
+              <div class="col-sm-3">Communication</div>
+              <div class="col-sm-3">
+                <span ng-repeat="s in stars" ng-show="rating.communication" ng-class="{ hide: s > rating.communication }"> <img src="/img/icon-star.png">  </span>
+              </div>
+              <div class="span6" ng-show="rating.editable">
+                <select id="rating_communication" name="rating_communication" ng-model="rating.communication" ui-validate="{ only_rate: 'validateRate($value)'}" ng-options="s for s in stars" required>
+                  <option value="">No feedback</option>
+                </select>
+              </div>
+          </div>
+          <div class="row question">
+              <div class="col-sm-3">Punctuality</div>
+              <div class="col-sm-3">
+                <span ng-repeat="s in stars" ng-show="rating.punctuality" ng-class="{ hide: s > rating.punctuality }"> <img src="/img/icon-star.png">  </span>
+              </div>
+              <div class="span6" ng-show="rating.editable">
+                <select id="rating_punctuality" name="rating_punctuality" ng-model="rating.punctuality" ui-validate="{ only_rate: 'validateRate($value)'}" ng-options="s for s in stars" required>
+                  <option value="">No feedback</option>
+                </select>
+              </div>
+          </div>
+          <div class="row question">
+              <div class="col-sm-3">Ease of Payment</div>
+              <div class="col-sm-3">
+                <span ng-repeat="s in stars" ng-show="rating.ease_of_payment"  ng-class="{ hide: s > rating.ease_of_payment }"> <img src="/img/icon-star.png">  </span>
+              </div>
+              <div class="span6" ng-show="rating.editable">
+                <select id="rating_ease_of_payment" name="rating_ease_of_payment" ng-model="rating.ease_of_payment" ui-validate="{ only_rate: 'validateRate($value)'}" ng-options="s for s in stars" required>
+                  <option value="">No feedback</option>
+                </select>
+              </div>
+          </div>
+          <div class="row question">
+              <div class="col-sm-3">Over all experience</div>
+              <div class="col-sm-3">
+                <span ng-repeat="s in stars" ng-show="rating.over_all_experience" ng-class="{ hide: s > rating.over_all_experience }"> <img src="/img/icon-star.png">  </span>
+              </div>
+              <div class="span6" ng-show="rating.editable">
+                <select id="rating_over_all_experience" name="rating_over_all_experience" ng-model="rating.over_all_experience" ui-validate="{ only_rate: 'validateRate($value)'}" ng-options="s for s in stars" required>
+                  <option value="">No feedback</option>
+                </select>
+              </div>
+          </div>
+          <div class="row question">
+              <div class="col-sm-3">How likely are you to use this company again?</div>
+              <div class="col-sm-3">
+                <span ng-repeat="s in stars" ng-show="rating.like_again" ng-class="{ hide: s > rating.like_again }"> <img src="/img/icon-star.png">  </span>
+              </div>
+              <div class="span6" ng-show="rating.editable">
+                <select id="rating_like_again" name="rating_like_again" ng-model="rating.like_again" ui-validate="{ only_rate: 'validateRate($value)'}" ng-options="s for s in stars" required>
+                  <option value="">No feedback</option>
+                </select>
+              </div>
+          </div>
+          <div class="row question">
+              <div class="col-sm-3">Did this trip travel as expected?</div>
+              <div class="col-sm-3">{{ (rating.trip_expected) && ("Yes") || ("No") }}</div>
+              <div class="span6" ng-show="rating.editable">
+                <label class="radio">
+                  <input name="rating_trip_expected" type="radio" ng-model="rating.trip_expected" ng-click="rating.trip_expeted=1" value="1">
+                  Yes, it did
+                </label>
+                <label class="radio">
+                  <input name="rating_trip_expected" type="radio" ng-model="rating.trip_expected" ng-click="rating.trip_expected=0" value="0">
+                  No, it didn't
+                </label>
+              </div>
+          </div>
+          <div ng-show="rating.editable" class="row">
+            <div class="span6 offset6">
+              <button ng-click="updateRating()" class="btn btn-primary" ng-disabled="newRating.$invalid">
+                Give Rating To This Company
+              </button>
+            </div>
+          </div>
+        </form>
+
+
+        <div id="ratings" ng-show="detailed_company.ratings_taken.length">
+          <hr />
+          <h5>Ratings for this company</h5>
+          <div ng-repeat="r in detailed_company.ratings_taken">
+            <div ng-show="r.score">
+              <div class="row" >
+                <div class="col-sm-3">
+                  <span ng-repeat="s in stars" ng-class="{ hide: s > r.score }"> 
+                    <img src="/img/icon-star.png">  
+                    <img src="/img/icon-star-half.png" ng-if="r.score - s > 0 && r.score - s < 1">  
+                  </span>
+                  ({{r.score}})
+                  From
+                  <a data-toggle="modal" href="#modal"  ng-click="displayCompanyProfile(r.rater._id)">{{r.rater.name}}</a>
+                </div>
+                <div class="col-sm-9">
+                  <div class="row">
+                    <div class="col-sm-3">Communication</div>
+                    <div class="col-sm-9"><span ng-repeat="s in stars" ng-show="r.communication" ng-class="{ hide: s > r.communication }"> <img src="/img/icon-star.png">  </span></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3">Punctuality</div>
+                    <div class="col-sm-9"><span ng-repeat="s in stars" ng-show="r.punctuality" ng-class="{ hide: s > r.punctuality }"> <img src="/img/icon-star.png">  </span></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3">Ease of payment</div>
+                    <div class="col-sm-9"><span ng-repeat="s in stars" ng-show="r.ease_of_payment" ng-class="{ hide: s > r.ease_of_payment }"> <img src="/img/icon-star.png">  </span></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3">Over all experience</div>
+                    <div class="col-sm-9"><span ng-repeat="s in stars" ng-show="r.over_all_experience" ng-class="{ hide: s > r.over_all_experience }"> <img src="/img/icon-star.png">  </span></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3">How likely are you to use this company again?</div>
+                    <div class="col-sm-9"><span ng-repeat="s in stars" ng-show="r.like_again" ng-class="{ hide: s > r.like_again }"> <img src="/img/icon-star.png">  </span></div>
+                  </div>
+                  <div class="row">
+                    <div class="col-sm-3">Did this trip travel as expected?</div>
+                    <div class="col-sm-9">{{ (r.trip_expected) && ("Yes") || ("No") }} </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div ng-hide="r.score">
+                NO RATING from <a data-toggle="modal" href="#modal"  ng-click="displayCompanyProfile(r.rater._id)">{{r.rater.name}}</a>
+            </div>
+            <hr />
+          </div>
+        </div>
+      </div>
+   </div>
+  </section>
+</div>

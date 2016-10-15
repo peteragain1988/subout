@@ -1,0 +1,87 @@
+[{
+    "_id":"503026b08859aed418000004",
+    "active":false,
+    "name":"Vehicle Needed",
+    "color":"#69b645",
+    "active_red":false,
+    "icon": "glyphicon-hand-up",
+    
+    "evaluation":{
+       "type": "compare",
+       "property":"type",
+       "params":{
+            "value": "Vehicle Needed",
+            "operator": "=="
+        }   
+    }
+},
+
+{
+    "_id":"503026b08859aed418000005",
+    "active":false,
+    "name":"Vehicle for Hire",
+    "color":"#69b645",
+    "active_red":false,
+    "icon": "glyphicon-road",
+    
+    "evaluation":{
+       "type": "compare",
+       "property":"type",
+       "params":{
+            "value": "Vehicle for Hire",
+            "operator": "=="
+        }   
+    }
+},
+{
+    "_id":"503026b08859aed418000004",
+    "active":false,
+    "name":"Special",
+    "color":"#f25a29",
+    "active_red":true,
+    "icon": "glyphicon-bullhorn",
+    
+    "evaluation":{
+       "type": "compare",
+       "property":"type",
+       "params":{
+            "value": "Special",
+            "operator": "=="
+        }   
+    }
+},
+{
+    "_id":"503026b08859aed418000009",
+    "active":false,
+    "name":"Emergency",
+    "color":"#f25a29",
+    "active_red":true,
+    "icon": "glyphicon-plus-sign",
+    
+    "evaluation":{
+       "type": "compare",
+       "property":"type",
+       "params":{
+            "value": "Emergency",
+            "operator": "=="
+        }   
+    }
+},
+{
+    "_id":"503026b08859aed418000009",
+    "active":false,
+    "name":"Buy or Sell Parts and Vehicles",
+    "color":"#f25a29",
+    "active_red":true,
+    "icon": "glyphicon-cog",
+    
+    "evaluation":{
+       "type": "compare",
+       "property":"type",
+       "params":{
+            "value": "Buy or Sell Parts and Vehicles",
+            "operator": "=="
+        }   
+    }
+}
+]

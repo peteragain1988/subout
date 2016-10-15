@@ -1,0 +1,50 @@
+production:
+  sessions:
+    default:
+      database: <%= ENV['MONGO_DB_NAME'] %>
+      username: heroku
+      password: sub0utd3v
+      hosts:
+        - <%= ENV['MONGO_DB_HOST'] %>
+
+suboutdemo:
+  sessions:
+    default:
+      database: <%= ENV['MONGO_DB_NAME'] %>
+      username: heroku
+      password: sub0utd3v
+      hosts:
+        - <%= ENV['MONGO_DB_HOST'] %>
+
+suboutdev:
+  sessions:
+    default:
+      database: <%= ENV['MONGO_DB_NAME'] %>
+      username: heroku
+      password: sub0utd3v
+      hosts:
+        - <%= ENV['MONGO_DB_HOST'] %>
+
+subouttest:
+  sessions:
+    default:
+      database: <%= ENV['MONGO_DB_NAME'] %>
+      username: heroku
+      password: sub0utd3v
+      hosts:
+        - <%= ENV['MONGO_DB_HOST'] %>
+
+development:
+  # Configure available database sessions. (required)
+  sessions:
+    # Defines the default session. (required)
+    default:
+      database: <%= ENV['MONGO_DB_NAME'] || "subout_development" %>
+      hosts:
+        - localhost:27017
+test:
+  sessions:
+    default:
+      database: subout_test
+      hosts:
+        - localhost:27017

@@ -1,0 +1,76 @@
+<div ui-content-for="title">
+  <span>My Opportunities</span>
+</div>
+
+<div ui-content-for="footer">
+  <div class="btn-group justified">
+    <a href="" ui-turn-on="modal1" class="btn btn-navbar" ng-click="setOpportunity({}); displayNewOpportunityForm()"><i class="glyphicon glyphicon-plus"></i> Post new opportunity</a>
+  </div>
+</div>
+
+<div id="opportunities" class="section">
+  <br/>
+  <div class="alert alert-info">
+    <span class="display-message-extra">Welcome</span>
+    <span class="company display-message-subject">{{company.name}}!</span>
+    <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+  </div>
+
+  <div class="search">
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+        <input type="text" ng-model="query" ui-keypress="{13:'fullTextSearch()'}" placeholder="Search opportunities for..." class="form-control"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div>
+  </div>
+
+  <table class="table table-border" ng-repeat="opportunity in paginated_results">
+    <tr>
+      <td class="table-header reference-number">Reference #</td>
+      <td>{{opportunity.reference_number}}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Type</td>
+      <td>{{opportunity.type}}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Name</td>
+      <td><a href="#/opportunities/{{opportunity.reference_number}}">{{opportunity.name}}</a></td>
+    </tr>
+    <tr>
+      <td class="table-header">Description</td>
+      <td>{{opportunity.description}}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Ends</td>
+      <td>
+        <span class='created-at timeago' relative-time title="{{opportunity.bidding_ends_at}}">{{opportunity.bidding_ends_at|date}}</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header">Winning Bidder</td>
+      <td>{{opportunity.winner.name}}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Amount</td>
+      <td>
+        <span ng-show="opportunity.winner.name">{{ opportunity.winner.amount | soCurrency }}</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header">Bid range</td>
+      <td class="current-bid-amount">
+        <span ng-show="opportunity.reserve_amount" class="alert-danger">{{ opportunity.reserve_amount | soCurrency }}</span>
+        <span ng-show="opportunity.reserve_amount && opportunity.lowest_bid_amount"> / </span>
+        <span ng-show="opportunity.lowest_bid_amount"><span class="alert-info">{{ opportunity.lowest_bid_amount | soCurrency }} ~ {{ opportunity.highest_bid_amount | soCurrency }}</span></span>
+      </td>
+    </tr>
+  </table>
+
+  <div class="clearfix"><div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div></div>
+</div>

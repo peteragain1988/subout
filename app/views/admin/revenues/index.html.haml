@@ -1,0 +1,61 @@
+%h3 Revenues
+.row-fluid
+  .span12
+    = form_tag admin_revenues_path, method: :get, class: "form-inline" do
+      = text_field_tag :start_date, params[:start_date], class: 'datepicker input-medium', readonly: true
+      &#126;
+      = text_field_tag :end_date, params[:end_date], class: 'datepicker input-medium', readonly: true
+      = submit_tag "View", class: 'btn btn-primary'
+.row-fluid
+  .span1
+    =link_to "This week", admin_revenues_path(start_date: Time.now.beginning_of_week.strftime("%Y-%m-%d"), end_date: Time.now.end_of_week.strftime("%Y-%m-%d"))
+    %br
+    = link_to "Last week", admin_revenues_path(start_date: 1.week.ago.beginning_of_week.strftime("%Y-%m-%d"), end_date: 1.week.ago.end_of_week.strftime("%Y-%m-%d"))
+    %br
+  .span1
+    = link_to "This month", admin_revenues_path(start_date: Time.now.beginning_of_month.strftime("%Y-%m-%d"), end_date: Time.now.end_of_month.strftime("%Y-%m-%d"))
+    %br
+    = link_to "Last month", admin_revenues_path(start_date: 1.month.ago.beginning_of_month.strftime("%Y-%m-%d"), end_date: 1.month.ago.end_of_month.strftime("%Y-%m-%d"))
+    %br
+  .span1
+    = link_to "This Year", admin_revenues_path(start_date: Time.now.beginning_of_year.strftime("%Y-%m-%d"), end_date: Time.now.end_of_year.strftime("%Y-%m-%d"))
+    %br
+    = link_to "Last Year", admin_revenues_path(start_date: 1.year.ago.beginning_of_year.strftime("%Y-%m-%d"), end_date: 1.year.ago.end_of_year.strftime("%Y-%m-%d"))
+    %br
+
+%br
+%table.table.table-striped.table-bordered
+  %tr
+    %th State
+    %th
+      - if params[:sort_by] != 'posted_oppor_count'
+        = link_to "Total Opportunties Posted #", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'posted_oppor_count', sort_order: 'desc')
+      - elsif params[:sort_order] == 'asc'
+        = link_to "Total Opportunties Posted # ^", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'posted_oppor_count', sort_order: 'desc')
+      - else
+        = link_to "Total Opportunties Posted # v", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'posted_oppor_count', sort_order: 'asc')
+    %th
+      - if params[:sort_by] != 'total_awarded_count'
+        = link_to "Total Awarded #", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'total_awarded_count', sort_order: 'desc')
+      - elsif params[:sort_order] == 'asc'
+        = link_to "Total Awarded # ^", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'total_awarded_count', sort_order: 'desc')
+      - else
+        = link_to "Total Awarded # v", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'total_awarded_count', sort_order: 'asc')
+    %th
+      - if params[:sort_by] != 'total_awarded_amount'
+        = link_to "Total Awarded $", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'total_awarded_amount', sort_order: 'desc')
+      - elsif params[:sort_order] == 'asc'
+        = link_to "Total Awarded $ ^", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'total_awarded_amount', sort_order: 'desc')
+      - else
+        = link_to "Total Awarded $ v", admin_revenues_path(start_date: params[:start_date], end_date: params[:end_date], sort_by: 'total_awarded_amount', sort_order: 'asc')
+  - @revenues.each do |item|
+    %tr
+      %td= item[0]
+      %td= number_with_delimiter(item[1][:posted_oppor_count])
+      %td= number_with_delimiter(item[1][:total_awarded_count])
+      %td= number_to_currency(item[1][:total_awarded_amount])
+  %tr
+    %td Sum
+    %td= number_with_delimiter(@revenues.sum{ |r| r[1][:posted_oppor_count] })
+    %td= number_with_delimiter(@revenues.sum{ |r| r[1][:total_awarded_count] })
+    %td= number_to_currency(@revenues.sum{ |r| r[1][:total_awarded_amount] })

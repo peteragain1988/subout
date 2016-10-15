@@ -1,0 +1,66 @@
+%h2 Recent Bids of #{@company.name}
+%h4 Recent won bid amount for last 90 days: #{number_to_currency(@company.recent_won_bid_amount)}
+%h4 Total won bid amount: #{number_to_currency(@company.last_years_won_bid_amount)}
+%hr
+%table.table.table-striped
+  %thead
+    %th Opp Name
+    %th Opp Company
+    %th Opp Description
+    %th Opp Details
+    %th Opp Start Price
+    %th Opp Created At
+    %th Bid Amount
+    %th Bid Comment
+    %th Bid Details
+    %th Bid Created At
+
+  - @company.bids.last_90_days.each do |bid|
+    %tr
+      %td=bid.opportunity.name
+      %td
+        =bid.opportunity.buyer.name
+        %br
+        =bid.opportunity.buyer.email
+      %td=bid.opportunity.description
+      %td
+        %strong Pick up time:
+        =bid.opportunity.start_date
+        =bid.opportunity.start_time
+        %br
+        %strong Pick up location:
+        =bid.opportunity.start_region
+        %br
+        %br
+        %strong Drop off time:
+        =bid.opportunity.end_date
+        =bid.opportunity.end_time
+        %br
+        %strong Drop off location:
+        =bid.opportunity.end_region
+
+        %br
+        %br
+        %strong Vehicle Type:
+        =bid.opportunity.vehicle_type
+
+        %br
+        %br
+        %strong Bidding Ends At:
+        =distance_of_time_in_words(Time.now, bid.opportunity.bidding_ends_at)
+        from now
+      %td=number_to_currency(bid.opportunity.reserve_amount)
+      %td
+        = bid.opportunity.created_at
+      %td=number_to_currency(bid.amount)
+      %td=bid.comment
+      %td
+        - bid.vehicles.each do |vehicle|
+          %p
+            = vehicle.to_html.html_safe
+      %td
+        = bid.created_at
+
+     
+
+      

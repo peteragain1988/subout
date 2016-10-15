@@ -1,0 +1,74 @@
+<div id="favorites">
+  <div class="clearfix">
+    <div class="welcome display-message top-banner pull-left">
+      <span class="display-message-extra">Welcome</span>
+      <span class="company display-message-subject">{{company.name}}!</span>
+      <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+    </div>
+    <div class="new-favorite">
+      <a href="#modal" data-toggle="modal" ng-click="displayNewFavoriteForm()" class="btn btn-primary add-new-favorite">Add new Favorite</a>
+    </div>
+  </div>
+  <div class="hidden-xs hidden-sm">
+    <table class="table">
+      <tr>
+        <th colspan="2">Company</th>
+        <th>Bids</th>
+        <th>Opportunities</th>
+        <th>&nbsp;</th>
+      </tr>
+      <tr ng-repeat="company in favoriteCompanies" >
+        <td class="col-md-2">
+          <span>
+            <img ng-show="company.logo_url" src="{{company.logo_url}}" />
+            <div ng-hide="company.logo_url">No Logo Available</div>
+          </span>
+        </td>
+        <td class="col-md-4">
+          <span>
+            <a href="#modal" data-toggle="modal" ng-click="displayCompanyProfile(company._id)">{{company.name}}</a>
+          </span>
+        </td>
+        <td class="col-md-2">
+          <span>{{company.bids_count}}</span>
+        </td>
+        <td class="col-md-1">
+          <span>{{company.opportunities_count}}</span>
+        </td>
+        <td class="col-md-3">
+          <a href="/#/dashboard?company_id={{company._id}}">View Activity</a>
+          <a class="btn btn-small btn-danger pull-right" ng-click="removeFavorite(company)">Remove</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="visible-xs visible-sm">
+    <table class="table table-border" ng-repeat="company in favoriteCompanies">
+      <tr>
+        <td class="table-header">Company</td>
+        <td>
+          <img ng-show="company.logo" src="{{company.logo}}" />
+          <div ng-hide="company.logo">No Logo Available</div>
+          <a href="#modal" data-toggle="modal" ng-click="displayCompanyProfile(company._id)">{{company.name}}</a>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-header">Bids</td>
+        <td><span class="span2">{{company.bids_count}}</span></td>
+      </tr>
+      <tr>
+        <td class="table-header">Opportunities</td>
+        <td>
+          <span class="span2">{{company.opportunities_count}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <a href="/#/dashboard?company_id={{company._id}}">View Activity</a>
+          <a class="btn btn-small btn-danger pull-right" ng-click="removeFavorite(company)">Remove</a>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

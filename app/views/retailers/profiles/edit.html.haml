@@ -1,0 +1,98 @@
+%h3 Website domain setting
+%hr
+- if @retailer.domains.blank?
+  %p.alert.alert-warning
+    Please update domains as which you are going to insert subout consumer form
+%br
+= bootstrap_form_for @retailer, url: retailers_profile_path(@retailer), layout: :horizontal, label_col: "col-sm-2", control_col: "col-sm-10" do |f|
+  = f.hidden_field :id
+  = f.text_area :domains, help: "You can add comma delimited domains"
+
+  = f.form_group do
+    = f.submit "Update", class: "btn btn-danger"
+%br
+%br
+
+%hr
+%h3 Embedded HTML
+
+%h4 Javascript
+%p.alert.alert-warning
+  Consumer form requires the jQuery, please add jQuery plugin on your website if its not included.
+%textarea.form-control{:cols => "50", :onclick => "this.focus();this.select()", :readonly => "readonly", :rows => "1"}
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+%br
+%p.alert.alert-warning
+  Also we recommend pickadate.js library for the date picker and time picker. 
+  Please see
+  %a{href: "http://amsul.ca/pickadate.js/"}
+    http://amsul.ca/pickadate.js/
+
+%h4 HTML
+- @quote_request = QuoteRequest.new
+%textarea.form-control{:cols => "50", :onclick => "this.focus();this.select()", :readonly => "readonly", :rows => "20"}
+  = raw CGI.escapeHTML(render 'consumers/quote_requests/form_html', form_layout: 'vertical')
+
+%h4 Preview
+= render 'consumers/quote_requests/form_html', form_layout: 'vertical'
+
+%br
+%br
+%hr
+%h3 Embedded IFRAME
+
+%textarea.form-control{:cols => "50", :onclick => "this.focus();this.select()", :readonly => "readonly", :rows => "10"}
+  %iframe#subout_iframe{src:"#{new_consumers_quote_request_url(retailer_id: @retailer.id)}", style: "width: 100%; height: 600px; border: 0;"}
+  :javascript
+    // resize iframe
+    var subout_callback = function (event) {
+      if (event.data.event == 'resize') {
+        var subout_iframe = document.getElementById('subout_iframe');
+        if (subout_iframe) {
+            subout_iframe.style.height = 100 + event.data.height + "px";
+        }
+        return;
+      }
+      if (event.data.event == 'success') {
+        //thankyou page event
+      }
+    };
+    if (window.addEventListener) {
+      window.addEventListener("message", subout_callback, false);
+    } else if (window.attachEvent) {
+      window.attachEvent("onmessage", subout_callback);
+    }
+
+%p.help-block.alert.alert-info
+  Use 'css_url' param to apply custom css.
+  %br
+  #{new_consumers_quote_request_url(retailer_id: @retailer.id, css_url: 'urltocustomstylesheet.css')}
+
+%p.help-block.alert.alert-info
+  Use 'redirect' param to redirect to your own thankyou page.
+  %br
+  #{new_consumers_quote_request_url(retailer_id: @retailer.id, redirect: 'urlofthankyoupage')}
+
+%h3 Preview
+%iframe#subout_iframe{src:"#{new_consumers_quote_request_path(retailer_id: @retailer.id, redirect: '')}", style: "width: 100%; height: 600px;"}
+
+:javascript
+  var subout_callback = function (event) {
+    if (event.data.event == 'resize')
+    {
+      var subout_iframe = document.getElementById('subout_iframe');
+      if (subout_iframe) {
+          subout_iframe.style.height = 100 + event.data.height + "px";
+      }
+      return;
+    }
+    if (event.data.event == 'success') {
+      //thankyou page event
+    }
+  };
+
+  if (window.addEventListener) {
+      window.addEventListener("message", subout_callback, false);
+  } else if (window.attachEvent) {
+      window.attachEvent("onmessage", subout_callback);
+  }

@@ -1,0 +1,12 @@
+%h2 Settings
+%table.table.table-stripe.table-bordered
+  %tr
+    %th Key
+    %th Value
+    %th
+  - Setting.all.each do |setting|
+    %tr
+      %td= setting.to_s
+      %td= setting.value.nil? ? "" : setting.value.html_safe
+      %td= link_to "Edit", edit_admin_setting_path(setting.id), class: 'btn btn-primary'
+

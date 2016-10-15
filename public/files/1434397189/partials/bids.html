@@ -1,0 +1,45 @@
+<div id="bids">
+  <div class="row">
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <div class="welcome display-message top-banner">
+        <span class="display-message-extra">Welcome</span>
+        <span class="company display-message-subject">{{company.name}}!</span>
+        <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <div class="form-group clearfix">
+        <a href="#modal" class="btn btn-primary pull-right" data-toggle="modal" ng-click="setOpportunity({}); displayNewOpportunityForm()">Post new opportunity</a>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix">
+    <div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div>
+  </div>
+
+  <div>
+    <table class="table">
+      <tr>
+        <th>Opportunity</th>
+        <th>Amount</th>
+        <th>Comment</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+      <tr ng-repeat="bid in paginated_results" >
+        <td>
+          <a href="#/opportunities/{{bid.opportunity.reference_number}}" ng-if="bid.opportunity.for_quote_only==false">{{bid.opportunity.name}}</a>
+          <a href="#/quote_requests/{{bid.opportunity.reference_number}}" ng-if="bid.opportunity.for_quote_only==true">{{bid.opportunity.name}}</a>
+        </td>
+        <td>{{bid.amount | soCurrency}}</td>
+        <td>{{bid.comment}}</td>
+        <td>{{bid.status}}</td>
+        <td>{{bid.created_at | date}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="clearfix">
+    <div class="pull-right" ng-show="maxPage > 1" ng-include="'pagination'"></div>
+  </div>
+</div>

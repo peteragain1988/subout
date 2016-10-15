@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Subout</title>
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="//use.typekit.net/ymk8bty.js"></script>
+    <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" initial-scale="1.0" />
+    <link rel="stylesheet" href="/files/1434397189/css/app.css" />
+<!--[if lte IE 7]>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
+<![endif]-->
+<!--[if lte IE 8]>
+  <script src="/html5shiv.js"></script>
+  <script src="/respond.min.js"></script>
+<![endif]-->
+    <script>
+      window.brunch = window.brunch || {};
+      window.brunch['auto-reload'] = {
+        enabled: true
+      };
+      eval_ = eval;
+    </script>
+    <script src="/files/1434397189/js/vendor.js"></script>
+    <script src="/files/1434397189/js/app.js"></script>
+<script type="text/ng-template" id="pagination">
+    <ul class="pagination">
+      <li ng-class="{disabled: page == 1}">
+        <a href ng-click="setPage(1)">« First</a>
+      </li>
+      <li ng-class="{disabled: startPage == 1}">
+        <a href ng-click="setPage(startPage - 10)">« Prev</a>
+      </li>
+      <li ng-repeat="n in pages" ng-class="{active: n == page}" >
+        <a ng-click="setPage(n)">{{n}}</a>
+      </li>
+      <li ng-class="{disabled: endPage == maxPage}">
+        <a href ng-click="setPage(startPage + 10)">Next »</a>
+      </li>
+      <li ng-class="{disabled: page == maxPage}">
+        <a href ng-click="setPage(maxPage)">Last »</a>
+      </li>
+    </ul>
+</script>
+  </head>
+
+  <body data-subout-deploy="1434397189">
+  <div id="pageWrapper" class="container" ng-class="{ signin: !userSignedIn()}">
+      <div id="subout-navbar" class="navbar" ng-class="{mobile: isMobile}" ng-if="userSignedIn()">
+        <div class="row">
+          <ul id="top-links" class="pull-right">
+            <li><a  href="#modal" data-taget="#modal" data-toggle="modal" ng-click="displaySettings()">Settings</a></li>
+            <li><a ng-click="signOut()">Sign Out</a></li>
+          </ul>
+          
+        </div>
+        <div class="navbar-inner row">
+          <div class="col-md-3 col-sm-4">
+            <div id="subout-brand">
+              <a href="#" id="logo"><img src="/img/logo.png" class="img-responsive"></a>
+              <div id="subout-loading" class="loading-animation"></div>
+            </div>
+          </div>
+
+          <div class="col-md-9 col-sm-8">
+            <nav class="navbar navbar-subout" role="navigation">
+              <div class="navbar-header visible-xs">
+                <div class="pull-left">{{currentMenuName()}}</div>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+                   <span class="sr-only">Toggle navigation</span>
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+                   <span class="icon-bar"></span>
+                </button>
+              </div>
+              <div class="collapse navbar-collapse navbar-collapse-1">
+                <div class="hidden-sm hidden-xs">
+                  <ul id="menu" class="nav navbar navbar-nav">
+                    <li ng-class="{active: currentPath()=='/available-opportunities'}"><a href="#/available-opportunities">Buy/Bid Now</a></li>
+                    <li ng-class="{active: currentPath()=='/dashboard'}"><a href="#/dashboard">Subout Activity</a></li>
+                    <li ng-class="{active: currentPath()=='/bids'}"><a href="#/bids">My Bids</a></li>
+                    <li ng-class="{active: currentPath()=='/opportunities'}"><a href="#/opportunities">My Opportunities</a></li>
+                    <li ng-class="{active: currentPath()=='/opportunities'}">
+                    </li>
+                    <!--<li ng-class="{active: currentPath()=='/favorites'}"><a href="#/favorites">Favorites</a></li>-->
+                  </ul>
+                </div>
+                <div class="visible-sm">
+                  <ul id="menu" class="nav navbar navbar-nav nav-mobile">
+                    <li ng-class="{active: currentPath()=='/available-opportunities'}"><a href="#/available-opportunities">Buy/Bid Now</a></li>
+                    <li ng-class="{active: currentPath()=='/dashboard'}"><a href="#/dashboard">Subout Activity</a></li>
+                    <li ng-class="{active: currentPath()=='/bids'}"><a href="#/bids">My Bids</a></li>
+                    <li ng-class="{active: currentPath()=='/opportunities'}"><a href="#/opportunities">My Opportunities</a></li>
+                    <!--<li ng-class="{active: currentPath()=='/favorites'}"><a href="#/favorites">Favorites</a></li>-->
+                  </ul>
+                </div>
+                <div class="visible-xs">
+                  <ul id="menu" class="nav navbar nav-mobile">
+                    <li ng-class="{active: currentPath()=='/available-opportunities'}"><a href="#/available-opportunities">Buy/Bid Now</a></li>
+                    <li ng-class="{active: currentPath()=='/dashboard'}"><a href="#/dashboard">Subout Activity</a></li>
+                    <li ng-class="{active: currentPath()=='/bids'}"><a href="#/bids">My Bids</a></li>
+                    <li ng-class="{active: currentPath()=='/opportunities'}"><a href="#/opportunities">My Opportunities</a></li>
+                    <!--<li ng-class="{active: currentPath()=='/favorites'}"><a href="#/favorites">Favorites</a></li>-->
+                  </ul>
+                </div>
+              </div>
+            </nav>
+
+          </div>
+        </div>
+      </div>
+      <div id="application-message" ng-if="userSignedIn()">
+        <p class="inner" ng-bind-html="application_message.value"></p>
+      </div>
+      <div id="content" ng-view="content" class="ng-cloak"></div>
+      <div id="modal" class="modal fade" role="modal">
+        <div class="modal-dialog">
+          <div id="modal-stage" class="modal-content" ng-include="modal"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      var googleAnalyticsKey = null;
+      var hostname = location.hostname;
+      if (hostname == "suboutapp.com") {
+        googleAnalyticsKey = 'UA-38160184-1';
+      } else if (hostname == "subouttest.herokuapp.com") {
+        googleAnalyticsKey = 'UA-38160184-2';
+      } else if (hostname == "suboutdev.herokuapp.com") {
+        googleAnalyticsKey = "UA-38160184-4";
+      } else if (hostname == "suboutdemo.herokuapp.com") {
+        googleAnalyticsKey = "UA-38160184-5";
+      } else if (hostname == "www.lvh.me") {
+        googleAnalyticsKey = "UA-38160184-7";
+      } else {
+        googleAnalyticsKey = 'UA-38160184-3';
+      }
+      if (googleAnalyticsKey) {
+        _gaq.push(['_setAccount', googleAnalyticsKey]);
+        (function() {
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+      }
+    </script>
+  </body>
+</html>

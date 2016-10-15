@@ -1,0 +1,37 @@
+%h2 Customers
+.clearfix
+  .pull-right
+    = paginate @quote_requests
+    %br
+%table.table
+  %thead
+    %th Name
+    %th Phone
+    %th Email
+    %th State of Departure
+    %th Location of Departure
+    %th Date of Departure
+    %th Requested At
+
+  - @quote_requests.each do |qr|
+    %tr
+      %td
+        = qr.first_name
+        = qr.last_name
+      %td
+        = qr.phone
+      %td
+        = qr.email
+      %td
+        = qr.start_region
+      %td
+        = qr.start_location
+      %td
+        = qr.start_date
+      %td
+        = qr.created_at
+
+.clearfix
+  .pull-right
+    = paginate @quote_requests
+    %br

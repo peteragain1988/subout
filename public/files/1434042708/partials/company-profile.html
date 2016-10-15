@@ -1,0 +1,82 @@
+<div id="company-profile">
+    <div class="modal-header">
+        <button data-dismiss="modal" class="close" type="button">
+            x
+        </button>
+        <h3>PROFILE</h3>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-info" ng-show="notice">
+        {{notice}}
+      </div>
+        <section class="section-content">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h4>{{other_company.name}}</h4>
+                </div>
+                <div class="col-sm-6"><img ng-show="other_company.logo_url" class="logo" ng-src="{{other_company.logo_url}}" />
+                </div>
+            </div>
+           
+            <div class="row">
+                <div class="col-sm-3">DOT Number:</div>
+                <div class="col-sm-9"><a target="_blank" href="http://www.safer.fmcsa.dot.gov/query.asp?searchtype=ANY&query_type=queryCarrierSnapshot&query_param=USDOT&original_query_param=NAME&query_string={{other_company.dot_number}}">{{other_company.dot_number}}</a></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">Insurance</div>
+                <div class="col-sm-9"><a target="_blank" href="http://li-public.fmcsa.dot.gov/LIVIEW/pkg_carrquery.prc_carrlist?n_dotno={{other_company.dot_number}}">{{other_company.insurance}}</a></div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">Established Date:</div>
+                <div class="col-sm-9">{{other_company.since}}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">Fleet Size:</div>
+                <div class="col-sm-9">{{other_company.fleet_size}}</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">Contact:</div>
+                <div class="col-sm-9">
+                  <a href="mailto:{{other_company.email}}">{{other_company.contact_name}} ({{other_company.email}})</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">Contact Phone:</div>
+                <div class="col-sm-9">
+                  {{other_company.contact_phone}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">Website:</div>
+                <div class="col-sm-9">
+                    <a href="{{other_company.website | websiteUrl}}" target="_blank">{{other_company.website}}</a>
+                </div>
+            </div>
+
+            <div ng-show="other_company.score" class="row">
+              <div class="col-sm-3">Score:</div>
+              <div class="col-sm-9">
+                <span ng-repeat="s in stars" ng-class="{ hide: s > other_company.score }"> 
+                  <img src="/img/icon-star.png">
+                  <img src="/img/icon-star-half.png" ng-if="other_company.score - s > 0 && other_company.score - s < 1">  
+                </span>
+                ( {{other_company.score}} )
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="add-to-favorites" ng-show="other_company.canBeAddedAsFavorite(company)">
+                <a ng-click="addToFavorites(other_company)" class="btn btn-small btn-success"><i class="glyphicon glyphicon-plus"></i>Add to Favorites</a>
+              </div>
+              <button data-dismiss="modal" class="btn btn-small btn-danger" type="button">Cancel</button>
+              <a href="#/companies/{{other_company._id}}" ng-click="closeModal()">Please click here to see more detailed information</a>
+            </div>
+        </section>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+<div id="opportunity-show">
+  <div class="welcome display-message top-banner">
+    <span class="display-message-extra">Welcome</span>
+    <span class="company display-message-subject">{{company.name}}!</span>
+    <span class="display-message sales-info" sales-info-messages="salesInfoMessages"></span>
+  </div>
+  <div class="row">
+    <div class="col-sm-3">
+      <h5>OFFERED BY</h5>
+      <div class="company-info">
+        <ul>
+          <li>
+            <div><img src="/img/consumer.png" style="max-width: 100px;"></div>
+          </li>
+          <li>{{quote_request.name}} <i>({{quote_request.status}})</i></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-sm-9">
+      <div class="row">
+        <div class="col-sm-8 details">
+          <div>
+            <ul>
+              <li><span class="label-field">Pick up time: </span>{{quote_request.start_date | soShortDate}} {{quote_request.start_time}}</li>
+              <li><span class="label-field">Pick up location: </span>{{quote_request.start_location}}</li>
+              <li><span class="label-field">Drop off location: </span>{{quote_request.end_location}}</li>
+              <li><span class="label-field">Departure time: </span>{{quote_request.departure_date | soShortDate}} {{quote_request.departure_time}}</li>
+            </ul>
+          </div>
+          <div ng-show="quote_request.trip_type">
+            <span class="label-field">Trip Type: </span>{{quote_request.trip_type}}
+          </div>
+          <div ng-show="quote_request.vehicle_type">
+            <span class="label-field">Vehicle Type: </span>{{quote_request.vehicle_type}}
+          </div>
+          <div ng-show="quote_request.vehicle_count > 1">
+            <span class="label-field">Total Number Of Vehicles Needed: </span>{{quote_request.vehicle_count}}
+          </div>
+          <div class="description">
+            <div><strong>Description</strong></div>
+            <div class="content">{{quote_request.description}}</div>
+          </div>
+          <div>
+            <ul>
+              <li><span class="label-field">Created: </span>{{quote_request.created_at | soShortDate}}</li>
+            </ul>
+          </div>
+          <div>
+            <span class="label-field">SO#: </span>{{quote_request.reference_number}}
+          </div>
+          <div ng-show="quote_request.email">
+            <span class="label-field">Contact email: </span>{{quote_request.email}}
+          </div>
+          <div>
+            <span class="label-field">Bidding ends:</span>
+              <span ng-class='{relative_time:quote_request.bidding_ends_at}' title="{{quote_request.bidding_ends_at}}">
+                {{quote_request.bidding_ends_at|date}}
+              </span>
+          </div>
+          <div>
+            <a ng-if="quote_request.quotable==true" href="#modal" class="btn btn-success btn-small" data-toggle="modal" ng-click="displayNewQuoteForm(quote_request)">Quote</a>
+          </div>
+
+        </div>
+      </div>
+
+        <hr />
+        <h4>Bid History</h4>
+        <div>
+          <table class="bid-history table">
+            <tr ng-repeat="bid in quote_request.recent_quotes">
+              <td><strong>{{bid.amount | soCurrency}}</strong></td>
+              <td>
+                <div ng-show="quote_request.vehicle_count > 1"> <strong>{{bid.vehicle_count}}</strong> vehicle(s) </div>
+                <div ng-show="bid.bidder._id == company._id">
+                  <div ng-repeat="vehicle in bid.vehicles">
+                    <p>
+                    <strong>Bus year:</strong> {{vehicle.year}}, 
+                    <strong>Type:</strong> {{vehicle.type && vehicle.type||vehicle.type_other}},
+                    <strong>Passengers:</strong> {{vehicle.passenger_count}},
+                    <strong>gratuity included?:</strong> {{vehicle.gratuity_included && 'Yes'||'No'}}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td>on <strong>{{bid.created_at | soShortDate}}</strong></td>
+              <td>
+                <span ng-show="bid.bidder._id == company._id">
+                  by <a data-toggle="modal" href="#modal" ng-click="displayCompanyProfile(bid.bidder._id)">{{bid.bidder.name}}</a>
+                </span>
+              </td>
+              <td ng-show="quote_request.buyer._id == company._id"><span class="glyphicon glyphicon-phone">{{bid.bidder.contact_phone}}</span></td>
+              <td class="tpa">
+                 <img src="/img/tpa-logo.png" ng-show="bid.bidder.tpa">
+              </td>
+              <td>{{bid.comment}}</td>
+              <td>
+                  <span class="text-info" ng-show="quote_request.buyer._id == company._id || bid.bidder._id == company._id">
+                    <strong>Status: </strong>
+                    <span>{{bid.state}}</span>
+                  </span>
+              </td>
+            </tr>
+          </table>
+        </div>
+    </div>
+  </div>
+</div>
